@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <title>N/ICE SLEEP — Overnight ICE Detention</title>
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+  <!-- Leaflet -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+  <!-- Geist + Geist Mono -->
+  <link rel="stylesheet"
+    href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@500;600&display=swap" />
+
+  <style>
+    /* ─── RESET ─────────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Geist', 'Inter', Arial, sans-serif;
+      background: #1a1a2e;
+      color: #e2e8f0;
+    }
+
+    /* force dark bg behind VIIRS tiles — prevents white flash on load */
+    .leaflet-container { background: #000 !important; }
+
+    #map {
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 100%;
+    }
+
+    /* ─── GLASS MORPHISM ─────────────────────────────────────────────── */
+    .glass {
+      background: rgba(26, 26, 46, 0.58);
+      border: 1px solid rgba(79, 70, 229, 0.35);
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* ─── TITLE PANEL ───────────────────────────────────────────────── */
+    #title-panel {
+      position: absolute;
+      top: 20px; left: 20px;
+      z-index: 1000;
+      padding: 20px 24px;
+      max-width: 300px;
+      pointer-events: none;
+    }
+
+    #title-panel h1 {
+      font-family: 'Geist Mono', 'Courier New', monospace;
+      font-size: 2rem;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 4px;
+    }
+
+    #title-panel .subtitle {
+      font-size: 0.7rem;
+      color: #a78bfa;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    #title-panel .description {
+      font-size: 0.72rem;
+      color: #7c8fa8;
+      line-height: 1.55;
+    }
+
+    /* ─── LEGEND ─────────────────────────────────────────────────────── */
+    #legend {
+      position: absolute;
+      bottom: 48px; left: 20px;
+      z-index: 1000;
+      padding: 14px 18px;
+      min-width: 172px;
+    }
+
+    .legend-heading {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 10px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-bottom: 7px;
+      font-size: 0.72rem;
+      color: #b0bec5;
+    }
+
+    .legend-dot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    hr.legend-rule {
+      border: none;
+      border-top: 1px solid rgba(79, 70, 229, 0.2);
+      margin: 10px 0;
+    }
+
+    .legend-size-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 5px;
+    }
+
+    .legend-size-label {
+      font-size: 0.68rem;
+      color: #7c8fa8;
+    }
+
+    /* ─── FILTER PANEL (placeholder) ─────────────────────────────────── */
+    #filter-panel {
+      position: absolute;
+      top: 20px; right: 20px;
+      z-index: 1000;
+      padding: 14px 18px;
+      min-width: 196px;
+    }
+
+    .filter-heading {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a78bfa;
+      margin-bottom: 10px;
+    }
+
+    .filter-placeholder {
+      background: rgba(79, 70, 229, 0.08);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      border-radius: 6px;
+      padding: 7px 10px;
+      font-size: 0.72rem;
+      color: #4b5a6a;
+      margin-bottom: 7px;
+      font-style: italic;
+      cursor: not-allowed;
+    }
+
+    /* ─── GEOLOCATION BUTTON (placeholder) ───────────────────────────── */
+    #geolocate-btn {
+      position: absolute;
+      bottom: 48px; right: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      background: rgba(79, 70, 229, 0.75);
+      border: 1px solid rgba(79, 70, 229, 0.9);
+      border-radius: 8px;
+      color: #e0e7ff;
+      font-family: 'Geist', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: background 0.15s ease;
+    }
+
+    #geolocate-btn:hover {
+      background: rgba(79, 70, 229, 0.95);
+    }
+
+    /* ─── LEAFLET OVERRIDES ───────────────────────────────────────────── */
+    .leaflet-control-zoom {
+      border: none !important;
+    }
+
+    .leaflet-control-zoom a {
+      background: rgba(26, 26, 46, 0.88) !important;
+      border: 1px solid rgba(79, 70, 229, 0.35) !important;
+      color: #a78bfa !important;
+      backdrop-filter: blur(8px);
+    }
+
+    .leaflet-control-zoom a:hover {
+      background: rgba(79, 70, 229, 0.2) !important;
+    }
+
+    .leaflet-control-attribution {
+      background: rgba(10, 10, 20, 0.7) !important;
+      color: #3a4a5a !important;
+      font-size: 9px !important;
+    }
+
+    .leaflet-control-attribution a {
+      color: #4f46e5 !important;
+    }
+
+    /* ─── POPUP ───────────────────────────────────────────────────────── */
+    .leaflet-popup-content-wrapper {
+      background: rgba(16, 16, 36, 0.97) !important;
+      border: 1px solid rgba(79, 70, 229, 0.4) !important;
+      border-radius: 10px !important;
+      color: #e2e8f0 !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+      padding: 0 !important;
+    }
+
+    .leaflet-popup-content {
+      margin: 14px 16px !important;
+      min-width: 200px;
+    }
+
+    .leaflet-popup-tip {
+      background: rgba(16, 16, 36, 0.97) !important;
+    }
+
+    .leaflet-popup-close-button {
+      color: #a78bfa !important;
+    }
+
+    .popup-name {
+      font-family: 'Geist Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: #ffffff;
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+
+    .popup-location {
+      font-size: 0.68rem;
+      color: #6366f1;
+      margin-bottom: 10px;
+    }
+
+    .popup-stat {
+      font-size: 0.68rem;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 4px;
+      color: #7c8fa8;
+    }
+
+    .popup-stat strong {
+      color: #e2e8f0;
+      font-weight: 500;
+    }
+
+    .popup-badge {
+      display: inline-block;
+      font-size: 0.58rem;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-top: 9px;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      font-family: 'Geist Mono', monospace;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="map"></div>
+
+  <!-- ─── TITLE ───────────────────────────────────────────────────────── -->
+  <div id="title-panel" class="glass">
+    <h1>N/ICE SLEEP</h1>
+    <p class="subtitle">Overnight Immigration Detention</p>
+    <p class="description">
+      Where ICE holds people after midnight — and whether that place is in the light.
+    </p>
+  </div>
+
+  <!-- ─── LEGEND ──────────────────────────────────────────────────────── -->
+  <div id="legend" class="glass">
+    <div class="legend-heading">Urban context</div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background: #818cf8;"></div>
+      Metropolitan
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background: #a78bfa;"></div>
+      Micropolitan
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background: #fb923c;"></div>
+      Rural / none
+    </div>
+    <hr class="legend-rule" />
+    <div class="legend-heading">Avg overnight detainees</div>
+    <div class="legend-size-row">
+      <svg width="22" height="22" style="flex-shrink:0"><circle cx="11" cy="11" r="3"
+        fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1"/></svg>
+      <span class="legend-size-label">&lt; 10</span>
+    </div>
+    <div class="legend-size-row">
+      <svg width="22" height="22" style="flex-shrink:0"><circle cx="11" cy="11" r="7"
+        fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1"/></svg>
+      <span class="legend-size-label">~ 100</span>
+    </div>
+    <div class="legend-size-row">
+      <svg width="22" height="22" style="flex-shrink:0"><circle cx="11" cy="11" r="11"
+        fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1"/></svg>
+      <span class="legend-size-label">~ 1,000+</span>
+    </div>
+  </div>
+
+  <!-- ─── FILTER PANEL (placeholder) ─────────────────────────────────── -->
+  <div id="filter-panel" class="glass">
+    <div class="filter-heading">Filter</div>
+    <!-- TODO: populate <select> from unique field_office values in loaded CSV -->
+    <div class="filter-placeholder">Field office: all ▾</div>
+    <!-- TODO: toggle buttons Metro / Micro / Rural → toggle layer visibility -->
+    <div class="filter-placeholder">CBSA type: all ▾</div>
+  </div>
+
+  <!-- ─── GEOLOCATION BUTTON (placeholder) ────────────────────────────── -->
+  <!-- TODO (Module 07): navigator.geolocation → Turf.js nearestPoint() → flyTo -->
+  <button id="geolocate-btn">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"/>
+      <circle cx="12" cy="12" r="1" fill="currentColor"/>
+      <line x1="12" y1="2" x2="12" y2="6"/>
+      <line x1="12" y1="18" x2="12" y2="22"/>
+      <line x1="2" y1="12" x2="6" y2="12"/>
+      <line x1="18" y1="12" x2="22" y2="12"/>
+    </svg>
+    Nearest facility
+  </button>
+
+  <!-- ─── SCRIPTS ──────────────────────────────────────────────────────── -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.4.2/chroma.min.js"></script>
+
+  <!-- PapaParse — uncomment once /data/ice_facilities_clean.csv is in the repo -->
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script> -->
+
+  <!-- Turf.js — uncomment when wiring geolocation nearest-facility (Module 07+) -->
+  <!-- <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script> -->
+
+  <script>
+
+    // ── MAP INIT ─────────────────────────────────────────────────────────
+    var map = L.map('map', {
+      center: [38, -97],
+      zoom: 4,
+      minZoom: 3,
+      maxZoom: 10,
+      zoomControl: false         // repositioned below to avoid title overlap
+    });
+
+    L.control.zoom({ position: 'bottomleft' }).addTo(map);
+
+    // ── BASEMAP: NASA VIIRS CITY LIGHTS ──────────────────────────────────
+    // Tiles stop updating past zoom 8 (NASA GIBS limit) — basemap stretches
+    // past that zoom level. A CartoDB.DarkMatter fallback can be added for
+    // higher zooms in a later module if needed.
+    var basemap_source =
+      'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}';
+
+    var basemap_options = {
+      attribution: 'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
+      bounds: [
+        [-85.0511287776, -179.999999975],
+        [85.0511287776,   179.999999975]
+      ],
+      minZoom: 1,
+      maxZoom: 8,
+      format: 'jpg',
+      time: '',
+      tilematrixset: 'GoogleMapsCompatible_Level',
+      opacity: 0.92            // high opacity — darkness is the point
+    };
+
+    L.tileLayer(basemap_source, basemap_options).addTo(map);
+
+    // ── COLOR SCALE: cbsa_type ───────────────────────────────────────────
+    // Metro  → cool indigo  (urban, connected, legally accessible)
+    // Micro  → soft purple  (mid-size context)
+    // Rural  → warm orange  (isolated, distant from legal services —
+    //           stands out against the dark satellite imagery intentionally)
+    var cbsaColors = {
+      'Metro': '#818cf8',
+      'Micro': '#a78bfa',
+      'Rural': '#fb923c'
+    };
+
+    function getColor(cbsaType) {
+      return cbsaColors[cbsaType] || '#64748b';   // gray fallback for nulls
+    }
+
+    // ── RADIUS SCALE: avg_midnight_pop ───────────────────────────────────
+    // Square-root scaling keeps circle area proportional to population value.
+    // Floor of 3px keeps zero-pop facilities (hospitals, staging areas) visible
+    // as structural presence rather than collapsing to invisible points.
+    function getRadius(pop) {
+      return Math.max(Math.sqrt(pop) * 0.7, 3);
+    }
+
+    // ── SAMPLE FACILITY DATA ─────────────────────────────────────────────
+    // Placeholder set — 8 representative facilities across cbsa_type and
+    // population range, drawn from known detention sites.
+    // Population values are approximate for mockup purposes.
+    //
+    // TODO: replace this entire var declaration + renderFacilities() call below
+    //       with the PapaParse block once /data/ice_facilities_clean.csv is
+    //       committed to the repo:
+    //
+    //   Papa.parse('data/ice_facilities_clean.csv', {
+    //     header: true,
+    //     dynamicTyping: true,
+    //     skipEmptyLines: true,
+    //     complete: function(results) {
+    //       renderFacilities(results.data);
+    //     }
+    //   });
+    var facilitiesData = [
+      {
+        facility_id: 'ADAMSMS',
+        name: 'Adams County Correctional Center',
+        city: 'Natchez', state: 'MS', field_office: 'New Orleans',
+        cbsa_type: 'Micro', lat: 31.557, lon: -91.221,
+        avg_midnight_pop: 2158.8, max_midnight_pop: 2563, days_midnight: 365
+      },
+      {
+        facility_id: 'STEWGGA',
+        name: 'Stewart Detention Center',
+        city: 'Lumpkin', state: 'GA', field_office: 'Atlanta',
+        cbsa_type: 'Rural', lat: 32.049, lon: -84.791,
+        avg_midnight_pop: 1714.2, max_midnight_pop: 1987, days_midnight: 365
+      },
+      {
+        facility_id: 'DILLTX',
+        name: 'Dilley Family Residential Center',
+        city: 'Dilley', state: 'TX', field_office: 'San Antonio',
+        cbsa_type: 'Rural', lat: 28.667, lon: -99.175,
+        avg_midnight_pop: 941.0, max_midnight_pop: 1082, days_midnight: 365
+      },
+      {
+        facility_id: 'ELSOITX',
+        name: 'El Paso Service Processing Center',
+        city: 'El Paso', state: 'TX', field_office: 'El Paso',
+        cbsa_type: 'Metro', lat: 31.722, lon: -106.383,
+        avg_midnight_pop: 846.3, max_midnight_pop: 1102, days_midnight: 365
+      },
+      {
+        facility_id: 'BROWTX',
+        name: 'Port Isabel Service Processing Center',
+        city: 'Los Fresnos', state: 'TX', field_office: 'San Antonio',
+        cbsa_type: 'Micro', lat: 26.073, lon: -97.471,
+        avg_midnight_pop: 432.1, max_midnight_pop: 598, days_midnight: 365
+      },
+      {
+        facility_id: 'CLBDCO',
+        name: 'Elbert County Detention Center',
+        city: 'Kiowa', state: 'CO', field_office: 'Denver',
+        cbsa_type: 'Rural', lat: 39.358, lon: -103.960,
+        avg_midnight_pop: 161.7, max_midnight_pop: 204, days_midnight: 365
+      },
+      {
+        facility_id: 'BERKSPA',
+        name: 'Berks County Residential Center',
+        city: 'Leesport', state: 'PA', field_office: 'Philadelphia',
+        cbsa_type: 'Metro', lat: 40.443, lon: -75.969,
+        avg_midnight_pop: 34.2, max_midnight_pop: 89, days_midnight: 298
+      },
+      {
+        facility_id: 'ABRXSPA',
+        name: 'Abraxas Academy',
+        city: 'Morgantown', state: 'PA', field_office: 'Philadelphia',
+        cbsa_type: 'Metro', lat: 40.192, lon: -75.916,
+        avg_midnight_pop: 0.6, max_midnight_pop: 5, days_midnight: 43
+      }
+    ];
+
+    // ── RENDER FACILITIES ────────────────────────────────────────────────
+    // Extracted as a named function so it can be called from PapaParse
+    // callback without duplication once real data replaces the sample above.
+    function renderFacilities(data) {
+      data.forEach(function(f) {
+
+        if (!f.lat || !f.lon) return;    // skip rows with missing coordinates
+
+        var color  = getColor(f.cbsa_type);
+        var radius = getRadius(f.avg_midnight_pop);
+
+        // badge color tied to cbsa_type for popup readability
+        var badgeBg = {
+          'Metro': 'rgba(129,140,248,0.15)',
+          'Micro': 'rgba(167,139,250,0.15)',
+          'Rural': 'rgba(251,146,60,0.15)'
+        }[f.cbsa_type] || 'rgba(100,116,139,0.15)';
+
+        var popup = [
+          '<div class="popup-name">' + f.name + '</div>',
+          '<div class="popup-location">' + f.city + ', ' + f.state + ' &mdash; ' + f.field_office + '</div>',
+          '<div class="popup-stat"><span>Avg overnight</span><strong>' + f.avg_midnight_pop.toFixed(1) + '</strong></div>',
+          '<div class="popup-stat"><span>Peak overnight</span><strong>' + f.max_midnight_pop + '</strong></div>',
+          '<div class="popup-stat"><span>Nights active</span><strong>' + f.days_midnight + ' / yr</strong></div>',
+          '<div><span class="popup-badge" style="background:' + badgeBg + ';color:' + color + ';border:1px solid ' + color + '44;">' + (f.cbsa_type || 'Rural') + '</span></div>'
+        ].join('');
+
+        L.circleMarker([f.lat, f.lon], {
+          radius:      radius,
+          color:       color,
+          weight:      1,
+          fillColor:   color,
+          fillOpacity: 0.4,
+          opacity:     0.9
+        })
+        .bindPopup(popup, { maxWidth: 240 })
+        // TODO (Module 07): replace bindPopup with sidebar info panel on click
+        .addTo(map);
+      });
+    }
+
+    renderFacilities(facilitiesData);
+
+    // ── FIELD OFFICE AOR POLYGONS (placeholder) ──────────────────────────
+    // TODO (Module 07): load ICE field office boundaries from deportationdata.org
+    //   fetch('data/ice_aor.geojson')
+    //     .then(function(r) { return r.json(); })
+    //     .then(function(geojson) {
+    //       L.geoJSON(geojson, {
+    //         style: {
+    //           color: 'rgba(79,70,229,0.5)',
+    //           weight: 0.8,
+    //           fill: false
+    //         }
+    //       }).addTo(map);
+    //     });
+
+    // ── US CITIES REFERENCE LAYER (placeholder) ──────────────────────────
+    // TODO (Module 07): load Natural Earth populated places, filter client-side
+    //   to US cities with pop >= 100,000 and render as small reference markers
+    //   fetch('https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_10m_populated_places.geojson')
+    //     .then(function(r) { return r.json(); })
+    //     .then(function(data) {
+    //       var usCities = data.features.filter(function(f) {
+    //         return f.properties.ADM0_A3 === 'USA' && f.properties.POP_MAX >= 100000;
+    //       });
+    //       // render as L.circleMarker (small, dim — reference only)
+    //     });
+
+    // ── AIRPORT LAYER (placeholder) ──────────────────────────────────────
+    // TODO (Module 07+): load major ICE air deportation hub airports
+    //   via OurAirports API or FAA dataset. Known hubs include Mesa-Falcon
+    //   Field (MQA), Alexandria IAP (AEX), Harlingen (HRL).
+    //   Render as icon markers (L.marker with custom SVG plane icon).
+
+    // ── GEOLOCATION (placeholder) ────────────────────────────────────────
+    // TODO (Module 07): navigator.geolocation.getCurrentPosition → convert to
+    //   Turf.js point → turf.nearestPoint(userPt, facilityCollection) →
+    //   map.flyTo(nearestFacility, zoom 9) → open popup
+    document.getElementById('geolocate-btn').addEventListener('click', function() {
+      alert('Geolocation: wired in Module 07');
+    });
+
+    // ── TIME SLIDER (placeholder) ─────────────────────────────────────────
+    // TODO (Module 07+): load pre-aggregated national midnight trend CSV
+    //   (from daily population dataset, ~1,300 rows) and render as a line
+    //   chart in a bottom panel. A slider can sequence per-facility views
+    //   showing change across the Jan 2025 policy inflection point.
+
+  </script>
+
+</body>
+</html>
