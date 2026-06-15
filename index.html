@@ -10,13 +10,39 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
   <!-- Geist + Geist Mono -->
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@500;600&display=swap" />
 
+  <!-- Potential fonts to replace/complement Geist below (experimental) -->
+
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Monofett&display=swap" rel="stylesheet">
+  
+  .bitcount-prop-double-<uniquifier> {
+    font-family: "Bitcount Prop Double", system-ui;
+    font-optical-sizing: auto;
+    font-weight: <weight>;
+    font-style: normal;
+    font-variation-settings:
+      "slnt" 0,
+      "CRSV" 0.5,
+      "ELSH" 0,
+      "ELXP" 0;
+  } -->
+
   <style>
     /* ─── RESET ─────────────────────────────────────────────────────── */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     body {
       font-family: 'Geist', 'Inter', Arial, sans-serif;
@@ -25,11 +51,14 @@
     }
 
     /* force dark bg behind VIIRS tiles — prevents white flash on load */
-    .leaflet-container { background: #000 !important; }
+    .leaflet-container {
+      background: #000 !important;
+    }
 
     #map {
       position: absolute;
-      top: 0; bottom: 0;
+      top: 0;
+      bottom: 0;
       width: 100%;
     }
 
@@ -45,7 +74,8 @@
     /* ─── TITLE PANEL ───────────────────────────────────────────────── */
     #title-panel {
       position: absolute;
-      top: 20px; left: 20px;
+      top: 20px;
+      left: 20px;
       z-index: 1000;
       padding: 20px 24px;
       max-width: 300px;
@@ -79,7 +109,8 @@
     /* ─── LEGEND ─────────────────────────────────────────────────────── */
     #legend {
       position: absolute;
-      bottom: 48px; left: 20px;
+      bottom: 48px;
+      left: 20px;
       z-index: 1000;
       padding: 14px 18px;
       min-width: 172px;
@@ -104,7 +135,8 @@
     }
 
     .legend-dot {
-      width: 10px; height: 10px;
+      width: 10px;
+      height: 10px;
       border-radius: 50%;
       flex-shrink: 0;
     }
@@ -130,7 +162,8 @@
     /* ─── FILTER PANEL (placeholder) ─────────────────────────────────── */
     #filter-panel {
       position: absolute;
-      top: 20px; right: 20px;
+      top: 20px;
+      right: 20px;
       z-index: 1000;
       padding: 14px 18px;
       min-width: 196px;
@@ -160,7 +193,8 @@
     /* ─── GEOLOCATION BUTTON (placeholder) ───────────────────────────── */
     #geolocate-btn {
       position: absolute;
-      bottom: 48px; right: 20px;
+      bottom: 48px;
+      right: 20px;
       z-index: 1000;
       display: flex;
       align-items: center;
@@ -306,18 +340,21 @@
     <hr class="legend-rule" />
     <div class="legend-heading">Avg overnight detainees</div>
     <div class="legend-size-row">
-      <svg width="22" height="22" style="flex-shrink:0"><circle cx="11" cy="11" r="3"
-        fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1"/></svg>
+      <svg width="22" height="22" style="flex-shrink:0">
+        <circle cx="11" cy="11" r="3" fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1" />
+      </svg>
       <span class="legend-size-label">&lt; 10</span>
     </div>
     <div class="legend-size-row">
-      <svg width="22" height="22" style="flex-shrink:0"><circle cx="11" cy="11" r="7"
-        fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1"/></svg>
+      <svg width="22" height="22" style="flex-shrink:0">
+        <circle cx="11" cy="11" r="7" fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1" />
+      </svg>
       <span class="legend-size-label">~ 100</span>
     </div>
     <div class="legend-size-row">
-      <svg width="22" height="22" style="flex-shrink:0"><circle cx="11" cy="11" r="11"
-        fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1"/></svg>
+      <svg width="22" height="22" style="flex-shrink:0">
+        <circle cx="11" cy="11" r="11" fill="rgba(255,255,255,0.12)" stroke="#818cf8" stroke-width="1" />
+      </svg>
       <span class="legend-size-label">~ 1,000+</span>
     </div>
   </div>
@@ -334,14 +371,14 @@
   <!-- ─── GEOLOCATION BUTTON (placeholder) ────────────────────────────── -->
   <!-- TODO (Module 07): navigator.geolocation → Turf.js nearestPoint() → flyTo -->
   <button id="geolocate-btn">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="10"/>
-      <circle cx="12" cy="12" r="1" fill="currentColor"/>
-      <line x1="12" y1="2" x2="12" y2="6"/>
-      <line x1="12" y1="18" x2="12" y2="22"/>
-      <line x1="2" y1="12" x2="6" y2="12"/>
-      <line x1="18" y1="12" x2="22" y2="12"/>
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10" />
+      <circle cx="12" cy="12" r="1" fill="currentColor" />
+      <line x1="12" y1="2" x2="12" y2="6" />
+      <line x1="12" y1="18" x2="12" y2="22" />
+      <line x1="2" y1="12" x2="6" y2="12" />
+      <line x1="18" y1="12" x2="22" y2="12" />
     </svg>
     Nearest facility
   </button>
@@ -382,7 +419,7 @@
       attribution: 'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
       bounds: [
         [-85.0511287776, -179.999999975],
-        [85.0511287776,   179.999999975]
+        [85.0511287776, 179.999999975]
       ],
       minZoom: 1,
       maxZoom: 8,
@@ -434,74 +471,17 @@
     //       renderFacilities(results.data);
     //     }
     //   });
-    var facilitiesData = [
-      {
-        facility_id: 'ADAMSMS',
-        name: 'Adams County Correctional Center',
-        city: 'Natchez', state: 'MS', field_office: 'New Orleans',
-        cbsa_type: 'Micro', lat: 31.557, lon: -91.221,
-        avg_midnight_pop: 2158.8, max_midnight_pop: 2563, days_midnight: 365
-      },
-      {
-        facility_id: 'STEWGGA',
-        name: 'Stewart Detention Center',
-        city: 'Lumpkin', state: 'GA', field_office: 'Atlanta',
-        cbsa_type: 'Rural', lat: 32.049, lon: -84.791,
-        avg_midnight_pop: 1714.2, max_midnight_pop: 1987, days_midnight: 365
-      },
-      {
-        facility_id: 'DILLTX',
-        name: 'Dilley Family Residential Center',
-        city: 'Dilley', state: 'TX', field_office: 'San Antonio',
-        cbsa_type: 'Rural', lat: 28.667, lon: -99.175,
-        avg_midnight_pop: 941.0, max_midnight_pop: 1082, days_midnight: 365
-      },
-      {
-        facility_id: 'ELSOITX',
-        name: 'El Paso Service Processing Center',
-        city: 'El Paso', state: 'TX', field_office: 'El Paso',
-        cbsa_type: 'Metro', lat: 31.722, lon: -106.383,
-        avg_midnight_pop: 846.3, max_midnight_pop: 1102, days_midnight: 365
-      },
-      {
-        facility_id: 'BROWTX',
-        name: 'Port Isabel Service Processing Center',
-        city: 'Los Fresnos', state: 'TX', field_office: 'San Antonio',
-        cbsa_type: 'Micro', lat: 26.073, lon: -97.471,
-        avg_midnight_pop: 432.1, max_midnight_pop: 598, days_midnight: 365
-      },
-      {
-        facility_id: 'CLBDCO',
-        name: 'Elbert County Detention Center',
-        city: 'Kiowa', state: 'CO', field_office: 'Denver',
-        cbsa_type: 'Rural', lat: 39.358, lon: -103.960,
-        avg_midnight_pop: 161.7, max_midnight_pop: 204, days_midnight: 365
-      },
-      {
-        facility_id: 'BERKSPA',
-        name: 'Berks County Residential Center',
-        city: 'Leesport', state: 'PA', field_office: 'Philadelphia',
-        cbsa_type: 'Metro', lat: 40.443, lon: -75.969,
-        avg_midnight_pop: 34.2, max_midnight_pop: 89, days_midnight: 298
-      },
-      {
-        facility_id: 'ABRXSPA',
-        name: 'Abraxas Academy',
-        city: 'Morgantown', state: 'PA', field_office: 'Philadelphia',
-        cbsa_type: 'Metro', lat: 40.192, lon: -75.916,
-        avg_midnight_pop: 0.6, max_midnight_pop: 5, days_midnight: 43
-      }
-    ];
+    var facilitiesData = [];
 
     // ── RENDER FACILITIES ────────────────────────────────────────────────
     // Extracted as a named function so it can be called from PapaParse
     // callback without duplication once real data replaces the sample above.
     function renderFacilities(data) {
-      data.forEach(function(f) {
+      data.forEach(function (f) {
 
         if (!f.lat || !f.lon) return;    // skip rows with missing coordinates
 
-        var color  = getColor(f.cbsa_type);
+        var color = getColor(f.cbsa_type);
         var radius = getRadius(f.avg_midnight_pop);
 
         // badge color tied to cbsa_type for popup readability
@@ -514,27 +494,55 @@
         var popup = [
           '<div class="popup-name">' + f.name + '</div>',
           '<div class="popup-location">' + f.city + ', ' + f.state + ' &mdash; ' + f.field_office + '</div>',
-          '<div class="popup-stat"><span>Avg overnight</span><strong>' + f.avg_midnight_pop.toFixed(1) + '</strong></div>',
+          '<div class="popup-stat"><span>Avg overnight</span><strong>' + (f.avg_midnight_pop || 0).toFixed(1) + '</strong></div>',
           '<div class="popup-stat"><span>Peak overnight</span><strong>' + f.max_midnight_pop + '</strong></div>',
           '<div class="popup-stat"><span>Nights active</span><strong>' + f.days_midnight + ' / yr</strong></div>',
           '<div><span class="popup-badge" style="background:' + badgeBg + ';color:' + color + ';border:1px solid ' + color + '44;">' + (f.cbsa_type || 'Rural') + '</span></div>'
         ].join('');
 
         L.circleMarker([f.lat, f.lon], {
-          radius:      radius,
-          color:       color,
-          weight:      1,
-          fillColor:   color,
+          radius: radius,
+          color: color,
+          weight: 1,
+          fillColor: color,
           fillOpacity: 0.4,
-          opacity:     0.9
+          opacity: 0.9
         })
-        .bindPopup(popup, { maxWidth: 240 })
-        // TODO (Module 07): replace bindPopup with sidebar info panel on click
-        .addTo(map);
+          .bindPopup(popup, { maxWidth: 240 })
+          // TODO (Module 07): replace bindPopup with sidebar info panel on click
+          .addTo(map);
       });
     }
 
-    renderFacilities(facilitiesData);
+    // ── LOAD DATA ───────────────────────────────────────────────
+    // Needs HTTP — using Live Server locally and later push to GitHub Pages.
+    // CSV goes in /data/ folder at repo root.
+    Papa.parse('data/facilities_avg_conv_clean.csv', {
+      download: true,          // tells PapaParse to fetch the URL
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+
+      complete: function (results) {
+        // diagnostic — read these on first load, then remove
+        console.log('Rows loaded:', results.data.length);
+        console.log('First row (field check):', results.data[0]);
+        console.log('cbsa_type values:',
+          [...new Set(results.data.map(function (r) { return r.cbsa_type; }))]
+        );
+
+        var facilities = results.data.filter(function (row) {
+          return row.lat && row.lon && !isNaN(parseFloat(row.lat));
+        });
+        console.log('With coordinates:', facilities.length);
+
+        renderFacilities(facilities);
+      },
+
+      error: function (err) {
+        console.error('PapaParse load error:', err);
+      }
+    });
 
     // ── FIELD OFFICE AOR POLYGONS (placeholder) ──────────────────────────
     // TODO (Module 07): load ICE field office boundaries from deportationdata.org
@@ -572,7 +580,7 @@
     // TODO (Module 07): navigator.geolocation.getCurrentPosition → convert to
     //   Turf.js point → turf.nearestPoint(userPt, facilityCollection) →
     //   map.flyTo(nearestFacility, zoom 9) → open popup
-    document.getElementById('geolocate-btn').addEventListener('click', function() {
+    document.getElementById('geolocate-btn').addEventListener('click', function () {
       alert('Geolocation: wired in Module 07');
     });
 
@@ -585,4 +593,5 @@
   </script>
 
 </body>
+
 </html>
