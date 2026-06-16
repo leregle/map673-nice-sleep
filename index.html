@@ -64,10 +64,10 @@
 
     /* ─── GLASS MORPHISM ─────────────────────────────────────────────── */
     .glass {
-      background: rgba(26, 26, 46, 0.58);
-      border: 1px solid rgba(79, 70, 229, 0.35);
+      background: rgba(27, 27, 45, 0.28);
+      border: 1px solid rgba(79, 70, 229, 0.45);
       border-radius: 12px;
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(3px);
       -webkit-backdrop-filter: blur(12px);
     }
 
@@ -218,6 +218,34 @@
       background: rgba(79, 70, 229, 0.95);
     }
 
+    #basemap-toggle {
+      position: absolute;
+      bottom: 96px;
+      /* sits ~8px above geolocate-btn */
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      background: rgba(26, 26, 46, 0.75);
+      border: 1px solid rgba(79, 70, 229, 0.5);
+      border-radius: 8px;
+      color: #e0e7ff;
+      font-family: 'Geist', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: background 0.15s ease;
+    }
+
+    #basemap-toggle:hover {
+      background: rgba(79, 70, 229, 0.25);
+    }
+
     /* ─── LEAFLET OVERRIDES ───────────────────────────────────────────── */
     .leaflet-control-zoom {
       border: none !important;
@@ -246,11 +274,13 @@
 
     /* ─── POPUP ───────────────────────────────────────────────────────── */
     .leaflet-popup-content-wrapper {
-      background: rgba(16, 16, 36, 0.97) !important;
-      border: 1px solid rgba(79, 70, 229, 0.4) !important;
+      background: rgba(27, 27, 45, 0.55) !important;
+      border: 1px solid rgba(79, 70, 229, 0.45) !important;
       border-radius: 10px !important;
       color: #e2e8f0 !important;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6) !important;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3) !important;
+      backdrop-filter: blur(5px) !important;
+      -webkit-backdrop-filter: blur(3px) !important;
       padding: 0 !important;
     }
 
@@ -260,7 +290,7 @@
     }
 
     .leaflet-popup-tip {
-      background: rgba(16, 16, 36, 0.97) !important;
+      background: rgba(27, 27, 45, 0.45) !important;
     }
 
     .leaflet-popup-close-button {
@@ -326,11 +356,11 @@
   <div id="legend" class="glass">
     <div class="legend-heading">Urban context</div>
     <div class="legend-item">
-      <div class="legend-dot" style="background: #818cf8;"></div>
+      <div class="legend-dot" style="background: #38bdf8;"></div>
       Metropolitan
     </div>
     <div class="legend-item">
-      <div class="legend-dot" style="background: #a78bfa;"></div>
+      <div class="legend-dot" style="background: #4ade80;"></div>
       Micropolitan
     </div>
     <div class="legend-item">
@@ -357,7 +387,18 @@
       </svg>
       <span class="legend-size-label">~ 1,000+</span>
     </div>
+    <hr class="legend-rule" />
+    <div class="legend-heading">Departure infrastructure</div>
+    <div class="legend-item">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5"
+        stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+        <path
+          d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
+      </svg>
+      ICE Air hub
+    </div>
   </div>
+
 
   <!-- ─── FILTER PANEL (placeholder) ─────────────────────────────────── -->
   <div id="filter-panel" class="glass">
@@ -368,8 +409,26 @@
     <div class="filter-placeholder">CBSA type: all ▾</div>
   </div>
 
-  <!-- ─── GEOLOCATION BUTTON (placeholder) ────────────────────────────── -->
-  <!-- TODO (Module 07): navigator.geolocation → Turf.js nearestPoint() → flyTo -->
+  <!-- ─── GEOLOCATION & TOGGLE BUTTON  ────────────────────────────── -->
+  <!-- TODO (for final): navigator.geolocation → Turf.js nearestPoint() → flyTo -->
+   
+  <!-- ——— BASEMAP TOGGLE ————— -->
+  <button id="basemap-toggle">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="5" />
+      <line x1="12" y1="1" x2="12" y2="3" />
+      <line x1="12" y1="21" x2="12" y2="23" />
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+      <line x1="1" y1="12" x2="3" y2="12" />
+      <line x1="21" y1="12" x2="23" y2="12" />
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+    </svg>
+    Hide city lights
+  </button>
+  <!-- ——— GEOLOC TOGGLE ————— -->
   <button id="geolocate-btn">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
       stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -406,6 +465,12 @@
       zoomControl: false         // repositioned below to avoid title overlap
     });
 
+    // Custom pane isolates VIIRS so CSS filter only affects it,
+    // not CartoDB or markers. z-index 201 puts it just above CartoDB (200).
+    map.createPane('viirsPane');
+    map.getPane('viirsPane').style.zIndex = 201;
+    map.getPane('viirsPane').style.filter = 'brightness(0.8) contrast(1.3)';
+
     L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
     // ── BASEMAP: NASA VIIRS CITY LIGHTS ──────────────────────────────────
@@ -416,7 +481,7 @@
       'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}';
 
     var basemap_options = {
-      attribution: 'Imagery provided by services from the Global Imagery Browse Services (GIBS), operated by the NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>) with funding provided by NASA/HQ.',
+      attribution: 'Imagery from the Global Imagery Browse Services (GIBS), NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>)',
       bounds: [
         [-85.0511287776, -179.999999975],
         [85.0511287776, 179.999999975]
@@ -426,19 +491,27 @@
       format: 'jpg',
       time: '',
       tilematrixset: 'GoogleMapsCompatible_Level',
-      opacity: 0.92            // high opacity — darkness is the point
+      opacity: 0.82,
+      pane: 'viirsPane'
     };
+
+    // ── BASE: CartoDB Dark Matter (zoom 1–19, always visible)
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
+      {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }
+    ).addTo(map);
 
     L.tileLayer(basemap_source, basemap_options).addTo(map);
 
     // ── COLOR SCALE: cbsa_type ───────────────────────────────────────────
-    // Metro  → cool indigo  (urban, connected, legally accessible)
-    // Micro  → soft purple  (mid-size context)
-    // Rural  → warm orange  (isolated, distant from legal services —
-    //           stands out against the dark satellite imagery intentionally)
+
     var cbsaColors = {
-      'Metro': '#818cf8',
-      'Micro': '#a78bfa',
+      'Metro': '#38bdf8',
+      'Micro': '#4ade80',
       'Rural': '#fb923c'
     };
 
@@ -452,30 +525,10 @@
     // as structural presence rather than collapsing to invisible points.
     function getRadius(pop) {
       return Math.max(Math.sqrt(pop) * 0.7, 3);
-    }
-
-    // ── SAMPLE FACILITY DATA ─────────────────────────────────────────────
-    // Placeholder set — 8 representative facilities across cbsa_type and
-    // population range, drawn from known detention sites.
-    // Population values are approximate for mockup purposes.
-    //
-    // TODO: replace this entire var declaration + renderFacilities() call below
-    //       with the PapaParse block once /data/ice_facilities_clean.csv is
-    //       committed to the repo:
-    //
-    //   Papa.parse('data/ice_facilities_clean.csv', {
-    //     header: true,
-    //     dynamicTyping: true,
-    //     skipEmptyLines: true,
-    //     complete: function(results) {
-    //       renderFacilities(results.data);
-    //     }
-    //   });
-    var facilitiesData = [];
+    };
 
     // ── RENDER FACILITIES ────────────────────────────────────────────────
-    // Extracted as a named function so it can be called from PapaParse
-    // callback without duplication once real data replaces the sample above.
+
     function renderFacilities(data) {
       data.forEach(function (f) {
 
@@ -493,7 +546,8 @@
 
         var popup = [
           '<div class="popup-name">' + f.name + '</div>',
-          '<div class="popup-location">' + f.city + ', ' + f.state + ' &mdash; ' + f.field_office + '</div>',
+          '<div class="popup-location">' + f.city + ', ' + f.state + '</div>' +
+          '<div class="popup-location" style="color:#4b5a6a;font-size:0.64rem;margin-top:2px;">' + f.field_office + ' Field Office</div>',
           '<div class="popup-stat"><span>Avg overnight</span><strong>' + (f.avg_midnight_pop || 0).toFixed(1) + '</strong></div>',
           '<div class="popup-stat"><span>Peak overnight</span><strong>' + f.max_midnight_pop + '</strong></div>',
           '<div class="popup-stat"><span>Nights active</span><strong>' + f.days_midnight + ' / yr</strong></div>',
@@ -505,7 +559,7 @@
           color: color,
           weight: 1,
           fillColor: color,
-          fillOpacity: 0.4,
+          fillOpacity: 0.25,
           opacity: 0.9
         })
           .bindPopup(popup, { maxWidth: 240 })
@@ -515,7 +569,7 @@
     }
 
     // ── LOAD DATA ───────────────────────────────────────────────
-    // Needs HTTP — using Live Server locally and later push to GitHub Pages.
+    // Using Live Server locally and later push to GitHub Pages.
     // CSV goes in /data/ folder at repo root.
     Papa.parse('data/facilities_avg_conv_clean.csv', {
       download: true,          // tells PapaParse to fetch the URL
@@ -524,12 +578,12 @@
       skipEmptyLines: true,
 
       complete: function (results) {
-        // diagnostic — read these on first load, then remove
-        console.log('Rows loaded:', results.data.length);
-        console.log('First row (field check):', results.data[0]);
-        console.log('cbsa_type values:',
-          [...new Set(results.data.map(function (r) { return r.cbsa_type; }))]
-        );
+        // diagnostic console logs (uncomment if csv breaks or not visible)
+        // console.log('Rows loaded:', results.data.length);
+        // console.log('First row (field check):', results.data[0]);
+        // console.log('cbsa_type values:',
+        //   [...new Set(results.data.map(function (r) { return r.cbsa_type; }))]
+        // );
 
         var facilities = results.data.filter(function (row) {
           return row.lat && row.lon && !isNaN(parseFloat(row.lat));
@@ -570,18 +624,158 @@
     //       // render as L.circleMarker (small, dim — reference only)
     //     });
 
-    // ── AIRPORT LAYER (placeholder) ──────────────────────────────────────
-    // TODO (Module 07+): load major ICE air deportation hub airports
-    //   via OurAirports API or FAA dataset. Known hubs include Mesa-Falcon
-    //   Field (MQA), Alexandria IAP (AEX), Harlingen (HRL).
-    //   Render as icon markers (L.marker with custom SVG plane icon).
+    // ── AIRPORT LAYER — ICE Air departure hubs ──────────────────────
+    // Source: Human Rights First, ICE Flight Monitor April 2026 Report.
+    // Tier 1: official ICE Air deportation staging facilities (named
+    //   explicitly in the report, p.9). Tier 2: high-volume secondary
+    //   hubs by 2025 departure count + 2026 monthly consistency.
+    // Coordinates approximate; verify via ourairports.com if needed.
+    // TODO (final week): scale iconSize by tier, or add opacity diff.
+    // TODO (future): poll api.adsb.lol/v2/icao/<codes> for live positions
+    //   using the ICAO hex list from adsbexchange URL in project notes.
 
-    // ── GEOLOCATION (placeholder) ────────────────────────────────────────
-    // TODO (Module 07): navigator.geolocation.getCurrentPosition → convert to
-    //   Turf.js point → turf.nearestPoint(userPt, facilityCollection) →
-    //   map.flyTo(nearestFacility, zoom 9) → open popup
+    var airportData = [
+      // ── TIER 1: official staging facilities ─────────────────────
+      {
+        icao: 'KAEX', iata: 'AEX', name: 'Alexandria International Airport',
+        city: 'Alexandria', state: 'LA',
+        lat: 31.327, lon: -92.550,
+        tier: 1,
+        departures_2025: 2439,
+        note: 'Primary domestic staging hub — 266 shuffle flights in April 2026 alone'
+      },
+      {
+        icao: 'KHRL', iata: 'HRL', name: 'Valley International Airport',
+        city: 'Harlingen', state: 'TX',
+        lat: 26.229, lon: -97.654,
+        tier: 1,
+        departures_2025: 1997,
+        note: 'Primary domestic staging hub — 135 shuffle flights in April 2026'
+      },
+      {
+        icao: 'KELP', iata: 'ELP', name: 'El Paso International Airport',
+        city: 'El Paso', state: 'TX',
+        lat: 31.807, lon: -106.378,
+        tier: 1,
+        departures_2025: 1159,
+        note: 'Official ICE Air staging facility — origin of 51-hour Poland/Moldova flight, Apr 2026'
+      },
+      {
+        icao: 'KIWA', iata: 'IWA', name: 'Phoenix-Mesa Gateway Airport',
+        city: 'Mesa', state: 'AZ',
+        lat: 33.308, lon: -111.655,
+        tier: 1,
+        departures_2025: 778,
+        note: 'Official ICE Air staging facility — AROCC (25,000 sq ft staging center) on site'
+      },
+
+      // ── TIER 2: high-volume secondary hubs ──────────────────────
+      {
+        icao: 'KMIA', iata: 'MIA', name: 'Miami International Airport',
+        city: 'Miami', state: 'FL',
+        lat: 25.796, lon: -80.287,
+        tier: 2,
+        departures_2025: 438,
+        note: 'High-volume hub — Cuba and Haiti removal connections; ~40 departures/month in 2026'
+      },
+      {
+        icao: 'KJAX', iata: 'JAX', name: 'Jacksonville International Airport',
+        city: 'Jacksonville', state: 'FL',
+        lat: 30.494, lon: -81.688,
+        tier: 2,
+        departures_2025: 221,
+        note: 'Consistent secondary hub — 26 departures in April 2026'
+      },
+      {
+        icao: 'KIAH', iata: 'IAH', name: 'Houston Bush Intercontinental Airport',
+        city: 'Houston', state: 'TX',
+        lat: 29.990, lon: -95.337,
+        tier: 2,
+        departures_2025: 237,
+        note: 'Major transfer node — 277 departures Jan–Apr 2026; origin for Mexico removal flights'
+      },
+      {
+        icao: 'KEWR', iata: 'EWR', name: 'Newark Liberty International Airport',
+        city: 'Newark', state: 'NJ',
+        lat: 40.693, lon: -74.169,
+        tier: 2,
+        departures_2025: 207,
+        note: 'Northeast hub — 86 departures Jan–Apr 2026'
+      },
+      {
+        icao: 'KYNG', iata: 'YNG', name: 'Youngstown-Warren Regional Airport',
+        city: 'Youngstown', state: 'OH',
+        lat: 41.261, lon: -80.679,
+        tier: 2,
+        departures_2025: 398,
+        note: 'Notably high-volume regional hub — named in report as routine multi-flight-per-week location'
+      },
+      {
+        icao: 'KBFI', iata: 'BFI', name: 'Boeing Field / King County Intl Airport',
+        city: 'Seattle', state: 'WA',
+        lat: 47.530, lon: -122.302,
+        tier: 2,
+        departures_2025: 115,
+        note: 'Pacific Northwest hub — detainees transferred from NWIPC Tacoma before departure'
+      },
+      {
+        icao: 'KMCI', iata: 'MCI', name: 'Kansas City International Airport',
+        city: 'Kansas City', state: 'MO',
+        lat: 39.298, lon: -94.714,
+        tier: 2,
+        departures_2025: 130,
+        note: 'Rapidly expanding interior hub — 130 departures in 2025, 44 in Jan–Apr 2026'
+      }
+    ];
+
+    var planeIcon = L.divIcon({
+      className: '',
+      html: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/>' +
+        '</svg>',
+      iconSize: [18, 18],
+      iconAnchor: [9, 9]
+    });
+
+    var airportLayer = L.layerGroup().addTo(map);
+
+    airportData.forEach(function (a) {
+      var tierLabel = a.tier === 1 ? 'Staging facility' : 'Transfer hub';
+      var tierColor = a.tier === 1 ? '#fb923c' : '#94a3b8';
+
+      L.marker([a.lat, a.lon], { icon: planeIcon })
+        .bindPopup(
+          '<div class="popup-name">' + a.name + '</div>' +
+          '<div class="popup-location">' +
+          a.city + ', ' + a.state + ' &mdash; ' +
+          '<span style="font-family:\'Geist Mono\',monospace">' + a.icao + '</span>' +
+          '</div>' +
+          '<div style="margin:6px 0 10px;">' +
+          '<span class="popup-badge" style="background:rgba(255,255,255,0.06);color:' + tierColor + ';border:1px solid ' + tierColor + '44;">' + tierLabel + '</span>' +
+          '</div>' +
+          '<div class="popup-stat"><span>2025 departures</span><strong>' + a.departures_2025.toLocaleString() + '</strong></div>' +
+          '<div class="popup-stat" style="display:block;margin-top:6px;font-size:0.65rem;color:#7c8fa8;">' + a.note + '</div>',
+          { maxWidth: 260 }
+        )
+        .addTo(airportLayer);
+    });
+
+    // ── BASEMAP TOGGLE ───────────────────────────────────────────────
+    var viirsVisible = true;
+
+    document.getElementById('basemap-toggle').addEventListener('click', function () {
+      viirsVisible = !viirsVisible;
+      map.getPane('viirsPane').style.display = viirsVisible ? 'block' : 'none';
+      this.querySelector('span')
+        ? this.querySelector('span').textContent = viirsVisible ? 'Hide city lights' : 'Show city lights'
+        : this.childNodes[this.childNodes.length - 1].textContent = viirsVisible ? ' Hide city lights' : ' Show city lights';
+    });
+
+    // ── GEOLOCATION ──────────────────────────────────────────────────
+    // TODO (final week): navigator.geolocation.getCurrentPosition →
+    //   Turf.js nearestPoint → flyTo nearest facility → open popup
     document.getElementById('geolocate-btn').addEventListener('click', function () {
-      alert('Geolocation: wired in Module 07');
+      alert('Geolocation: wired in final week');
     });
 
     // ── TIME SLIDER (placeholder) ─────────────────────────────────────────
