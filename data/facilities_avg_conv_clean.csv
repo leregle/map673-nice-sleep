@@ -76,8 +76,8 @@ BFLHPNY,Buffalo General Hospital,Buffalo,NY,Erie,42.90083971,-78.86576317,Buffal
 CBPHOLD,Buffalo USBP Hold Room,Cheektowaga,NY,Erie,42.93765609,-78.71391502,Buffalo,"Buffalo-Cheektowaga, NY",Metro,43.0,0.6,20.0
 BURLEND,Burleigh County Detention Center,Bismarck,ND,Burleigh,46.79632959,-100.7263795,St Paul,"Bismarck, ND",Metro,301.0,13.0,53.0
 BURNETX,Burnet County Jail,Burnet,TX,Burnet,30.74152144,-98.2530483,San Antonio,,Rural,1.0,0.0,4.0
-BUTLEOH,Butler County Sheriff?s Office,Hamilton,OH,Butler,39.38790911,-84.55572745,Detroit,"Cincinnati, OH-KY-IN",Metro,365.0,316.2,438.0
-CBPORIL,CBP O?Hare Airport Terminal 5 BC Ext,Chicago,IL,Cook,41.9747326,-87.89089245,Chicago,"Chicago-Naperville-Elgin, IL-IN",Metro,5.0,0.0,1.0
+BUTLEOH,Butler County Sheriff's Office,Hamilton,OH,Butler,39.38790911,-84.55572745,Detroit,"Cincinnati, OH-KY-IN",Metro,365.0,316.2,438.0
+CBPORIL,CBP O'Hare Airport Terminal 5 BC Ext,Chicago,IL,Cook,41.9747326,-87.89089245,Chicago,"Chicago-Naperville-Elgin, IL-IN",Metro,5.0,0.0,1.0
 CCANOOH,CCA Northeast OH Corrections,Youngstown,OH,Mahoning,41.13134916,-80.63152281,Detroit,"Youngstown-Warren, OH",Metro,365.0,204.4,269.0
 MPSIPAN,CNMI Department of Corrections,"Susupe, Saipan",MP,Saipan,15.1581786,145.7073558,San Francisco,,Rural,365.0,16.0,27.0
 CBRRSNC,Cabarrus County Jail,Concord,NC,Cabarrus,35.40932859,-80.5779668,Atlanta,"Charlotte-Concord-Gastonia, NC-SC",Metro,69.0,0.3,6.0
@@ -115,8 +115,8 @@ CHAVENM,Chavez Detention Center,Roswell,NM,Chaves,33.35126736,-104.5055643,El Pa
 CHSPKVA,Chesapeake City Jail,Chesapeake,VA,Chesapeake,36.71921713,-76.24997269,Washington,"Virginia Beach-Chesapeake-Norfolk, VA-NC",Metro,104.0,0.7,23.0
 CHFLDVA,Chesterfield County Jail,Chesterfield,VA,Chesterfield,37.37892798,-77.50784406,Washington,"Richmond, VA",Metro,0.0,0.0,0.0
 MDLNDNE,Chi Health Midlands Hospital,Papillion,NE,Sarpy,41.13572389,-96.04030382,St Paul,"Omaha, NE-IA",Metro,1.0,0.0,1.0
-CSLLFTX,Chi St. Luke?s HM Lufkin,Lufkin,TX,Angelina,31.33659801,-94.74156698,Houston,"Lufkin, TX",Micro,3.0,0.0,1.0
-CHISLTX,Chi St. Luke?s Health Memorial,Livingston,TX,Polk,30.73109919,-94.93936652,Houston,,Rural,1.0,0.0,2.0
+CSLLFTX,Chi St. Luke's HM Lufkin,Lufkin,TX,Angelina,31.33659801,-94.74156698,Houston,"Lufkin, TX",Micro,3.0,0.0,1.0
+CHISLTX,Chi St. Luke's Health Memorial,Livingston,TX,Polk,30.73109919,-94.93936652,Houston,,Rural,1.0,0.0,2.0
 CHPHOVA,Chippenham Hospital - Richmond,Richmond,VA,Richmond,37.51445053,-77.52573356,Washington,"Richmond, VA",Metro,14.0,0.1,1.0
 CHIPPMI,Chippewa County Correctional Facility,Sault Sainte Marie,MI,Chippewa,46.49743168,-84.34560789,Detroit,"Sault Ste. Marie, MI",Micro,365.0,37.9,49.0
 VTCHTDN,Chittenden Regional Correctional Facility,South Burlington,VT,Chittenden,44.44639778,-73.20538039,Boston,"Burlington-South Burlington, VT",Metro,361.0,5.1,12.0
@@ -133,7 +133,7 @@ CLARKIA,Clarke County Sheriff,Osceola,IA,Clarke,41.04467609,-93.76335286,St Paul
 CLAYCIN,Clay County Jail,Brazil,IN,Clay,39.52372922,-87.11907555,Chicago,"Terre Haute, IN",Metro,365.0,249.2,339.0
 CLINTPA,Clinton County Correctional Facility,Mcelhattan,PA,Clinton,41.15114278,-77.34937957,Philadelphia,"Lock Haven, PA",Micro,365.0,86.8,106.0
 CLICONY,Clinton County Jail,Plattsburgh,NY,Clinton,44.7200284,-73.46672469,Buffalo,"Plattsburgh, NY",Micro,357.0,4.9,14.0
-CLINTIN,Clinton County Sheriff?s Office,Frankfort,IN,Clinton,40.27934622,-86.50903267,Chicago,"Frankfort, IN",Micro,289.0,20.7,56.0
+CLINTIN,Clinton County Sheriff's Office,Frankfort,IN,Clinton,40.27934622,-86.50903267,Chicago,"Frankfort, IN",Micro,289.0,20.7,56.0
 CBENDTX,Coastal Bend Detention Center,Robstown,TX,Nueces,27.73672232,-97.75480211,Harlingen,"Corpus Christi, TX",Metro,364.0,61.0,172.0
 COBBJGA,Cobb County Sheriffs Office Adult Detention Center,Marietta,GA,Cobb,33.90856554,-84.57997695,Atlanta,"Atlanta-Sandy Springs-Roswell, GA",Metro,0.0,0.0,0.0
 COCONAZ,Coconino County Detention Facility,Flagstaff,AZ,Coconino,35.18722484,-111.6411599,Phoenix,"Flagstaff, AZ",Metro,0.0,0.0,0.0
@@ -152,7 +152,7 @@ CHMCINY,Courthouse Usm Cntl Islip,Central Islip,NY,Suffolk,40.75988623,-73.19149
 COXMEMO,Coxhealth Medical Center South,Springfield,MO,Greene,37.14577927,-93.27913576,Chicago,"Springfield, MO",Metro,19.0,0.1,1.0
 CROWGMN,Crow Wing County Jail,Brainerd,MN,Crow Wing,46.35660921,-94.20530053,St Paul,"Brainerd, MN",Micro,154.0,10.0,59.0
 CRYCCTX,Crystal City Correctional Center,Crystal City,TX,Zavala,28.74688094,-99.84383177,San Antonio,,Rural,0.0,0.0,0.0
-CULBETX,Culberson County Sheriff?s,Van Horn,TX,Culberson,31.04297641,-104.830544,El Paso,,Rural,4.0,0.0,1.0
+CULBETX,Culberson County Sheriff's,Van Horn,TX,Culberson,31.04297641,-104.830544,El Paso,,Rural,4.0,0.0,1.0
 CULPEVA,Culpeper County Adult Detention Center,Culpeper,VA,Culpeper,38.47401868,-77.99675084,Washington,"Washington-Arlington-Alexandria, DC-VA-MD-WV",Metro,3.0,0.0,1.0
 CUMBEME,Cumberland County Jail,Portland,ME,Cumberland,43.65117004,-70.28184004,Boston,"Portland-South Portland, ME",Metro,318.0,52.0,79.0
 CURRYNM,Curry County Detention Facility,Clovis,NM,Curry,34.40628552,-103.2062745,El Paso,"Clovis, NM",Micro,0.0,0.0,0.0
@@ -289,7 +289,7 @@ HCMCMMN,Hennepin County Medical Center,Minneapolis,MN,Hennepin,44.97210379,-93.2
 HENRIVA,Henrico County Jail,Barhamsville,VA,New Kent,37.49537919,-76.86187099,Washington,"Richmond, VA",Metro,0.0,0.0,0.0
 HERNAFL,Hernando County Jail,Brooksville,FL,Hernando,28.48386776,-82.45172885,Miami,"Tampa-St. Petersburg-Clearwater, FL",Metro,2.0,0.0,2.0
 HIDALNM,Hidalgo County Detention Center,Lordsburg,NM,Hidalgo,32.33784165,-108.6661874,El Paso,,Rural,0.0,0.0,0.0
-HIDALTX,Hidalgo County Sheriff?s Jail,Edinburg,TX,Hidalgo,26.416844,-98.12778001,Harlingen,"McAllen-Edinburg-Mission, TX",Metro,0.0,0.0,0.0
+HIDALTX,Hidalgo County Sheriff's Jail,Edinburg,TX,Hidalgo,26.416844,-98.12778001,Harlingen,"McAllen-Edinburg-Mission, TX",Metro,0.0,0.0,0.0
 AKHIGHL,Highland Mtn Correctional Center,Eagle River,AK,Anchorage,61.30306602,-149.581249,Seattle,"Anchorage, AK",Metro,37.0,0.1,2.0
 HGHBECO,Highlands Behavioral Health,Littleton,CO,Douglas,39.56277988,-104.9076912,Denver,"Denver-Aurora-Centennial, CO",Metro,0.0,0.0,0.0
 HICOJFL,Hillsborough County Jail,Tampa,FL,Hillsborough,27.95903699,-82.37143098,Miami,"Tampa-St. Petersburg-Clearwater, FL",Metro,142.0,2.2,46.0
@@ -338,7 +338,7 @@ LPZRHAZ,LA Paz Regional Hospital,Parker,AZ,La Paz,34.13640135,-114.2853361,Phoen
 LSRDCTX,LA Salle County Regional Detention Center,Encinal,TX,La Salle,28.04550349,-99.33632924,San Antonio,,Rural,365.0,209.7,362.0
 BOPLAT,LA Tuna Federal Correctional Institution,Anthony,TX,El Paso,31.98212529,-106.5914752,El Paso,"El Paso, TX",Metro,0.0,0.0,0.0
 LACKAPA,"Lackawana Cnty Jail, PA",Scranton,PA,Lackawanna,41.42272461,-75.64816981,Philadelphia,"Scranton--Wilkes-Barre, PA",Metro,0.0,0.0,0.0
-LAFAYLA,Lafayette Parish Sheriff?s Office Jail Annex,Lafayette,LA,Lafayette,30.22352032,-92.02141108,New Orleans,"Lafayette, LA",Metro,61.0,0.9,11.0
+LAFAYLA,Lafayette Parish Sheriff's Office Jail Annex,Lafayette,LA,Lafayette,30.22352032,-92.02141108,New Orleans,"Lafayette, LA",Metro,61.0,0.9,11.0
 LHMCBMA,Lahey Hospital & Medical Center,Burlington,MA,Middlesex,42.48548852,-71.20404746,Boston,"Boston-Cambridge-Newton, MA-NH",Metro,9.0,0.0,2.0
 LAKCOFL,Lake County Jail,Tavares,FL,Lake,28.80187717,-81.73296138,Miami,"Orlando-Kissimmee-Sanford, FL",Metro,79.0,0.3,4.0
 LARCOWY,Laramie County Jail,Cheyenne,WY,Laramie,41.13494563,-104.8198642,Denver,"Cheyenne, WY",Metro,165.0,1.9,15.0
@@ -357,7 +357,7 @@ LEVYCFL,Levy County Jail,Bronson,FL,Levy,29.4651518,-82.63967979,Miami,"Gainesvi
 LEXINSC,Lexington County Jail,Lexington,SC,Lexington,33.97926087,-81.25044606,Atlanta,"Columbia, SC",Metro,337.0,5.8,15.0
 LEXFCKY,Lexington Processing @ Fayette County,Lexington,KY,Fayette,38.06563162,-84.54514102,Chicago,"Lexington-Fayette, KY",Metro,0.0,0.0,0.0
 BOPLEX,Lexinton Federal Medical Center,Lexington,KY,Fayette,38.10463085,-84.56012963,Chicago,"Lexington-Fayette, KY",Metro,0.0,0.0,0.0
-LBRTYFL,Liberty County Sheriff?s Office,Bristol,FL,Liberty,30.43397638,-84.96868605,Miami,,Rural,1.0,0.0,1.0
+LBRTYFL,Liberty County Sheriff's Office,Bristol,FL,Liberty,30.43397638,-84.96868605,Miami,,Rural,1.0,0.0,1.0
 LIMESTX,Limestone County Detention Center,Groesbeck,TX,Limestone,31.52584114,-96.50657417,Houston,,Rural,365.0,162.9,296.0
 LIMCJTX,Limestone County Jail,Groesbeck,TX,Limestone,31.52584114,-96.50657417,Houston,,Rural,9.0,0.0,1.0
 LINCONE,Lincoln County Detention Center,North Platte,NE,Lincoln,41.13569388,-100.7639978,St Paul,"North Platte, NE",Micro,360.0,31.2,76.0
@@ -529,7 +529,7 @@ PRVMDKS,Providence Medical Group,Kansas City,KS,Wyandotte,39.12730061,-94.786979
 PUEBLCO,Pueblo County Jail,Pueblo,CO,Pueblo,38.27555705,-104.610633,Denver,"Pueblo, CO",Metro,0.0,0.0,0.0
 PUTMAFL,Putnam County Jail,Palatka,FL,Putnam,29.66833365,-81.66179215,Miami,"Palatka, FL",Micro,0.0,0.0,0.0
 PUTNMTN,Putnam County Sheriff,Cookeville,TN,Putnam,36.16153688,-85.49796141,New Orleans,"Cookeville, TN",Micro,308.0,13.9,56.0
-QUEMCHI,Queen?s Medical Center,Honolulu,HI,Honolulu,21.30787998,-157.8539078,San Francisco,"Urban Honolulu, HI",Metro,25.0,0.1,1.0
+QUEMCHI,Queen's Medical Center,Honolulu,HI,Honolulu,21.30787998,-157.8539078,San Francisco,"Urban Honolulu, HI",Metro,25.0,0.1,1.0
 RAADCMN,"Ramsey Adult Detention Center Annex, Spm",Saint Paul,MN,Ramsey,44.95628917,-93.08610962,St Paul,"Minneapolis-St. Paul-Bloomington, MN-WI",Metro,0.0,0.0,0.0
 RNDLLTX,Randall County Jail,Amarillo,TX,Randall,35.11763714,-101.8670628,Dallas,"Amarillo, TX",Metro,45.0,0.4,11.0
 RAPPSVA,Rapp Sec Center,Stafford,VA,Stafford,38.40682528,-77.42242233,Washington,"Washington-Arlington-Alexandria, DC-VA-MD-WV",Metro,141.0,0.9,12.0
@@ -578,7 +578,7 @@ SHERBMN,Sherburne County Jail Services,Elk River,MN,Sherburne,45.3045097,-93.619
 SIOUXIA,Sioux County Jail,Orange City,IA,Sioux,43.01882741,-96.07743013,St Paul,,Rural,184.0,5.8,22.0
 SNDHOLD,Snd District Staging,San Diego,CA,San Diego,32.71460715,-117.165296,San Diego,"San Diego-Chula Vista-Carlsbad, CA",Metro,340.0,9.2,56.0
 SNJHOLD,Snj Hold Room,Stockton,CA,San Joaquin,37.95375697,-121.3211203,San Francisco,"Stockton-Lodi, CA",Metro,0.0,0.0,0.0
-SMRVLTX,Somervell County Sheriff?s Department,Glen Rose,TX,Somervell,32.25009478,-97.75109712,Houston,,Rural,1.0,0.0,1.0
+SMRVLTX,Somervell County Sheriff's Department,Glen Rose,TX,Somervell,32.25009478,-97.75109712,Houston,,Rural,1.0,0.0,1.0
 WVSCENT,South Central Regional Jail,Charleston,WV,Kanawha,38.31099591,-81.71028615,Philadelphia,"Charleston, WV",Metro,365.0,25.6,140.0
 BASILLA,South Louisiana ICE Processing Center,Basile,LA,Evangeline,30.48171312,-92.58121682,New Orleans,,Rural,365.0,921.6,1005.0
 STFRCTX,South Texas Family Residential Center1,Dilley,TX,Frio,28.65785369,-99.20038782,San Antonio,,Rural,365.0,445.4,1039.0
@@ -591,15 +591,15 @@ BOPSPG,Springfield Federal Medical Center,Springfield,MO,Greene,37.17763662,-93.
 STCHRLA,St. Charles Parish Jail,Killona,LA,St. Charles,29.991934,-90.50261072,New Orleans,"New Orleans-Metairie, LA",Metro,0.0,0.0,0.0
 STCLAMI,St. Clair County Jail,Port Huron,MI,St. Clair,42.94230557,-82.47943808,Detroit,"Detroit-Warren-Dearborn, MI",Metro,365.0,54.8,77.0
 STELHOH,St. Elizabeth Youngstown Hospital,Youngstown,OH,Mahoning,41.11381376,-80.65611397,Detroit,"Youngstown-Warren, OH",Metro,16.0,0.1,2.0
-STJONFL,St. John?s County Jail,Saint Augustine,FL,St. Johns,29.94029975,-81.33880221,Miami,"Jacksonville, FL",Metro,6.0,0.1,12.0
-STJHCCA,St. John?s Hospital Camarillo,Camarillo,CA,Ventura,34.24360246,-119.0203184,Los Angeles,"Oxnard-Thousand Oaks-Ventura, CA",Metro,4.0,0.0,1.0
+STJONFL,St. Johns County Jail,Saint Augustine,FL,St. Johns,29.94029975,-81.33880221,Miami,"Jacksonville, FL",Metro,6.0,0.1,12.0
+STJHCCA,St. John's Hospital Camarillo,Camarillo,CA,Ventura,34.24360246,-119.0203184,Los Angeles,"Oxnard-Thousand Oaks-Ventura, CA",Metro,4.0,0.0,1.0
 STJMCWA,St. Joseph Medical Center,Tacoma,WA,Pierce,47.24542785,-122.4478638,Seattle,"Seattle-Tacoma-Bellevue, WA",Metro,182.0,1.4,5.0
-STJOSAZ,St. Joseph?s Hospital & Medical Center,Phoenix,AZ,Maricopa,33.48092072,-112.0792416,Phoenix,"Phoenix-Mesa-Chandler, AZ",Metro,25.0,0.1,1.0
+STJOSAZ,St. Joseph's Hospital & Medical Center,Phoenix,AZ,Maricopa,33.48092072,-112.0792416,Phoenix,"Phoenix-Mesa-Chandler, AZ",Metro,25.0,0.1,1.0
 STLUCFL,St. Lucie County Jail,Fort Pierce,FL,St. Lucie,27.45346523,-80.40944118,Miami,"Port St. Lucie, FL",Metro,73.0,0.4,11.0
-SLHTWTX,St. Luke?s Health - the Woodlands,The Woodlands,TX,Montgomery,30.20566754,-95.45833587000001,Houston,"Houston-Pasadena-The Woodlands, TX",Metro,1.0,0.0,1.0
+SLHTWTX,St. Luke's Health - the Woodlands,The Woodlands,TX,Montgomery,30.20566754,-95.45833587000001,Houston,"Houston-Pasadena-The Woodlands, TX",Metro,1.0,0.0,1.0
 STMARCA,St. Mary Medical Center,Apple Valley,CA,San Bernardino,34.54189778,-117.2655742,Los Angeles,"Riverside-San Bernardino-Ontario, CA",Metro,87.0,0.5,4.0
-SMARYMD,St. Mary?s County Detention Center,Leonardtown,MD,St. Mary's,38.30283319,-76.62814991,Baltimore,"Lexington Park, MD",Metro,1.0,0.0,1.0
-STMARAZ,St. Mary?s Hospital,Tucson,AZ,Pima,32.22820338,-111.0000813,Phoenix,"Tucson, AZ",Metro,0.0,0.0,0.0
+SMARYMD,St. Mary's County Detention Center,Leonardtown,MD,St. Mary's,38.30283319,-76.62814991,Baltimore,"Lexington Park, MD",Metro,1.0,0.0,1.0
+STMARAZ,St. Mary's Hospital,Tucson,AZ,Pima,32.22820338,-111.0000813,Phoenix,"Tucson, AZ",Metro,0.0,0.0,0.0
 STGENMO,Ste. Genevieve County Detention Center,Sainte Genevieve,MO,Ste. Genevieve,37.96605377,-90.05559285,Chicago,,Rural,365.0,96.0,179.0
 STWRTGA,Stewart Detention Center,Lumpkin,GA,Stewart,32.03560799,-84.77150169,Atlanta,"Columbus, GA-AL",Metro,365.0,2034.3,2290.0
 STK,Stockton Staging Facility,Stockton,CA,San Joaquin,37.95375697,-121.3211203,San Francisco,"Stockton-Lodi, CA",Metro,71.0,0.6,11.0

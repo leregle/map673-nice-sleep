@@ -417,12 +417,12 @@
 
   <!-- ——— BASEMAP TOGGLE —————
    uses lucide icon -->
-   
+
   <button id="basemap-toggle">
-  <i data-lucide="eye-off" id="icon-hide" width="13" height="13"></i>
-  <i data-lucide="eye"     id="icon-show" width="13" height="13" style="display:none"></i>
-  <span id="toggle-label">Hide city lights</span>
-</button>
+    <i data-lucide="eye-off" id="icon-hide" width="13" height="13"></i>
+    <i data-lucide="eye" id="icon-show" width="13" height="13" style="display:none"></i>
+    <span id="toggle-label">Hide city lights</span>
+  </button>
 
   <!-- ——— GEOLOC TOGGLE ————— -->
   <button id="geolocate-btn">
@@ -477,7 +477,7 @@
       'https://map1.vis.earthdata.nasa.gov/wmts-webmerc/VIIRS_CityLights_2012/default/{time}/{tilematrixset}{maxZoom}/{z}/{y}/{x}.{format}';
 
     var basemap_options = {
-      attribution: 'Imagery from the Global Imagery Browse Services (GIBS), NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>)',
+      attribution: 'Imagery from GIBS, NASA/GSFC/Earth Science Data and Information System (<a href="https://earthdata.nasa.gov">ESDIS</a>)',
       bounds: [
         [-85.0511287776, -179.999999975],
         [85.0511287776, 179.999999975]
@@ -490,6 +490,34 @@
       opacity: 0.82,
       pane: 'viirsPane'
     };
+
+    // —— (Optional) BASE: CartoDB Dark (only labels)
+    // perhaps better than only viirs 
+
+    // CartoDB base — NO labels (VIIRS + labelsPane handle the rest)
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',
+      {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+      }
+    ).addTo(map);
+
+    L.tileLayer(basemap_source, basemap_options).addTo(map);  // VIIRS on top of base
+
+    map.createPane('labelsPane'); // so it sits above markers
+    map.getPane('labelsPane').style.zIndex = 450;
+    map.getPane('labelsPane').style.pointerEvents = 'none';
+
+    L.tileLayer(
+      'https://{s}.basemaps.cartocdn.com/dark_only_labels/{z}/{x}/{y}' +
+      (L.Browser.retina ? '@2x.png' : '.png'), {
+      subdomains: 'abcd',
+      maxZoom: 20,
+      pane: 'labelsPane'
+    }
+    ).addTo(map);
 
     // ── BASE: CartoDB Dark Matter (zoom 1–19, always visible)
     L.tileLayer(
@@ -555,7 +583,7 @@
           color: color,
           weight: 1,
           fillColor: color,
-          fillOpacity: 0.25,
+          fillOpacity: 0.35,
           opacity: 0.9
         })
           .bindPopup(popup, { maxWidth: 240 })
@@ -724,6 +752,7 @@
       }
     ];
 
+    // Icon fetched from Lucide using their embed code
     var planeIcon = L.divIcon({
       className: '',
       html: '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
@@ -760,20 +789,20 @@
     var viirsVisible = true;
 
     document.getElementById('basemap-toggle').addEventListener('click', function () {
-  viirsVisible = !viirsVisible;
-  map.getPane('viirsPane').style.display = viirsVisible ? 'block' : 'none';
-  document.getElementById('icon-hide').style.display  = viirsVisible ? '' : 'none';
-  document.getElementById('icon-show').style.display  = viirsVisible ? 'none' : '';
-  document.getElementById('toggle-label').textContent = viirsVisible
-    ? 'Hide city lights'
-    : 'Show city lights';
-});
+      viirsVisible = !viirsVisible;
+      map.getPane('viirsPane').style.display = viirsVisible ? 'block' : 'none';
+      document.getElementById('icon-hide').style.display = viirsVisible ? '' : 'none';
+      document.getElementById('icon-show').style.display = viirsVisible ? 'none' : '';
+      document.getElementById('toggle-label').textContent = viirsVisible
+        ? 'Hide city lights'
+        : 'Show city lights';
+    });
 
     // ── GEOLOCATION ──────────────────────────────────────────────────
     // TODO (final week): navigator.geolocation.getCurrentPosition →
     //   Turf.js nearestPoint → flyTo nearest facility → open popup
     document.getElementById('geolocate-btn').addEventListener('click', function () {
-      alert('Geolocation: wired in final week');
+      alert('Geolocation: coming soon!');
     });
 
     lucide.createIcons(); // directs Lucide to display actual SVGs
@@ -782,7 +811,7 @@
     // TODO (Module 07+): load pre-aggregated national midnight trend CSV
     //   (from daily population dataset, ~1,300 rows) and render as a line
     //   chart in a bottom panel. A slider can sequence per-facility views
-    //   showing change across the Jan 2025 policy inflection point.
+    //   showing change across the Jan 2025 inflection point.
 
   </script>
 
