@@ -337,6 +337,9 @@
       font-family: 'Geist Mono', monospace;
     }
   </style>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
 </head>
 
 <body>
@@ -411,23 +414,16 @@
 
   <!-- ─── GEOLOCATION & TOGGLE BUTTON  ────────────────────────────── -->
   <!-- TODO (for final): navigator.geolocation → Turf.js nearestPoint() → flyTo -->
+
+  <!-- ——— BASEMAP TOGGLE —————
+   uses lucide icon -->
    
-  <!-- ——— BASEMAP TOGGLE ————— -->
   <button id="basemap-toggle">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-      stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <circle cx="12" cy="12" r="5" />
-      <line x1="12" y1="1" x2="12" y2="3" />
-      <line x1="12" y1="21" x2="12" y2="23" />
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-      <line x1="1" y1="12" x2="3" y2="12" />
-      <line x1="21" y1="12" x2="23" y2="12" />
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-    </svg>
-    Hide city lights
-  </button>
+  <i data-lucide="eye-off" id="icon-hide" width="13" height="13"></i>
+  <i data-lucide="eye"     id="icon-show" width="13" height="13" style="display:none"></i>
+  <span id="toggle-label">Hide city lights</span>
+</button>
+
   <!-- ——— GEOLOC TOGGLE ————— -->
   <button id="geolocate-btn">
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -764,12 +760,14 @@
     var viirsVisible = true;
 
     document.getElementById('basemap-toggle').addEventListener('click', function () {
-      viirsVisible = !viirsVisible;
-      map.getPane('viirsPane').style.display = viirsVisible ? 'block' : 'none';
-      this.querySelector('span')
-        ? this.querySelector('span').textContent = viirsVisible ? 'Hide city lights' : 'Show city lights'
-        : this.childNodes[this.childNodes.length - 1].textContent = viirsVisible ? ' Hide city lights' : ' Show city lights';
-    });
+  viirsVisible = !viirsVisible;
+  map.getPane('viirsPane').style.display = viirsVisible ? 'block' : 'none';
+  document.getElementById('icon-hide').style.display  = viirsVisible ? '' : 'none';
+  document.getElementById('icon-show').style.display  = viirsVisible ? 'none' : '';
+  document.getElementById('toggle-label').textContent = viirsVisible
+    ? 'Hide city lights'
+    : 'Show city lights';
+});
 
     // ── GEOLOCATION ──────────────────────────────────────────────────
     // TODO (final week): navigator.geolocation.getCurrentPosition →
@@ -777,6 +775,8 @@
     document.getElementById('geolocate-btn').addEventListener('click', function () {
       alert('Geolocation: wired in final week');
     });
+
+    lucide.createIcons(); // directs Lucide to display actual SVGs
 
     // ── TIME SLIDER (placeholder) ─────────────────────────────────────────
     // TODO (Module 07+): load pre-aggregated national midnight trend CSV
