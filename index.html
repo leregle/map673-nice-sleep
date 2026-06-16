@@ -391,14 +391,23 @@
       <span class="legend-size-label">~ 1,000+</span>
     </div>
     <hr class="legend-rule" />
-    <div class="legend-heading">Departure infrastructure</div>
+    <div class="legend-heading">Deportation infrastructure</div>
     <div class="legend-item">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="1.5"
         stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
         <path
           d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z" />
       </svg>
-      ICE Air hub
+      ICE Air Hub
+    </div>
+    <hr class="legend-rule" />
+    <div class="legend-heading">Field office AOR</div>
+    <div class="legend-item">
+      <svg width="16" height="16" viewBox="0 0 16 16" style="flex-shrink:0">
+        <rect x="1" y="3" width="14" height="10" rx="1" fill="none" stroke="#4f46e5" stroke-width="1.5"
+          stroke-opacity="0.6" />
+      </svg>
+      Field Office Boundary
     </div>
   </div>
 
@@ -531,6 +540,8 @@
 
     L.tileLayer(basemap_source, basemap_options).addTo(map);
 
+    var detentionLayer = L.layerGroup().addTo(map);
+
     // ── COLOR SCALE: cbsa_type ───────────────────────────────────────────
 
     var cbsaColors = {
@@ -548,20 +559,24 @@
     // Floor of 3px keeps zero-pop facilities (hospitals, staging areas) visible
     // as structural presence rather than collapsing to invisible points.
     function getRadius(pop) {
-      return Math.max(Math.sqrt(pop) * 0.7, 3);
+      return Math.max(3, Math.sqrt(pop || 1) * 1); // added max = 3 so that dots are more visible at hi zoom
     };
 
     // ── RENDER FACILITIES ────────────────────────────────────────────────
+    // Initial sort assures smaller circles are shown on top of larger ones
+    // Issue apparent at Folkston, GA in particular.
 
     function renderFacilities(data) {
-      data.forEach(function (f) {
+      var sorted = data.slice().sort(function (a, b) {
+        return (b.avg_midnight_pop || 0) - (a.avg_midnight_pop || 0);
+      });
 
-        if (!f.lat || !f.lon) return;    // skip rows with missing coordinates
+      sorted.forEach(function (f) {
+        if (!f.lat || !f.lon) return;
 
         var color = getColor(f.cbsa_type);
         var radius = getRadius(f.avg_midnight_pop);
 
-        // badge color tied to cbsa_type for popup readability
         var badgeBg = {
           'Metro': 'rgba(129,140,248,0.15)',
           'Micro': 'rgba(167,139,250,0.15)',
@@ -578,18 +593,26 @@
           '<div><span class="popup-badge" style="background:' + badgeBg + ';color:' + color + ';border:1px solid ' + color + '44;">' + (f.cbsa_type || 'Rural') + '</span></div>'
         ].join('');
 
-        L.circleMarker([f.lat, f.lon], {
+        var marker = L.circleMarker([f.lat, f.lon], {
           radius: radius,
           color: color,
           weight: 1,
           fillColor: color,
           fillOpacity: 0.35,
           opacity: 0.9
-        })
-          .bindPopup(popup, { maxWidth: 240 })
-          // TODO (Module 07): replace bindPopup with sidebar info panel on click
-          .addTo(map);
+        });
+        marker.on('mouseover', function () {
+          this.setStyle({ weight: 2.5, fillOpacity: 0.65 });
+          this.bringToFront();  // keep this for the Folkston case
+        });
+
+        marker.on('mouseout', function () {
+          this.setStyle({ weight: 1, fillOpacity: 0.35 });
+        });
+        marker.on('mouseover', function () { this.bringToFront(); });
+        marker.bindPopup(popup, { maxWidth: 240 }).addTo(detentionLayer);
       });
+
     }
 
     // ── LOAD DATA ───────────────────────────────────────────────
@@ -602,7 +625,7 @@
       skipEmptyLines: true,
 
       complete: function (results) {
-        // diagnostic console logs (uncomment if csv breaks or not visible)
+        // diagnostic console logs -> (uncomment if csv breaks or not visible)
         // console.log('Rows loaded:', results.data.length);
         // console.log('First row (field check):', results.data[0]);
         // console.log('cbsa_type values:',
@@ -624,17 +647,17 @@
 
     // ── FIELD OFFICE AOR POLYGONS (placeholder) ──────────────────────────
     // TODO (Module 07): load ICE field office boundaries from deportationdata.org
-    //   fetch('data/ice_aor.geojson')
-    //     .then(function(r) { return r.json(); })
-    //     .then(function(geojson) {
-    //       L.geoJSON(geojson, {
-    //         style: {
-    //           color: 'rgba(79,70,229,0.5)',
-    //           weight: 0.8,
-    //           fill: false
-    //         }
-    //       }).addTo(map);
-    //     });
+    fetch('data/ice_aor.geojson')
+      .then(function (r) { return r.json(); })
+      .then(function (geojson) {
+        L.geoJSON(geojson, {
+          style: {
+            color: 'rgba(79,70,229,0.85)',
+            weight: 0.8,
+            fill: false
+          }
+        }).addTo(map);
+      });
 
     // ── US CITIES REFERENCE LAYER (placeholder) ──────────────────────────
     // TODO (Module 07): load Natural Earth populated places, filter client-side
