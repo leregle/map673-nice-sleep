@@ -501,7 +501,7 @@
     };
 
     // —— (Optional) BASE: CartoDB Dark (only labels)
-    // perhaps better than only viirs 
+    // perhaps better than only viirs
 
     // CartoDB base — NO labels (VIIRS + labelsPane handle the rest)
     L.tileLayer(
@@ -513,9 +513,7 @@
       }
     ).addTo(map);
 
-    L.tileLayer(basemap_source, basemap_options).addTo(map);  // VIIRS on top of base
-
-    map.createPane('labelsPane'); // so it sits above markers
+    map.createPane('labelsPane'); // so it sits above markers!
     map.getPane('labelsPane').style.zIndex = 450;
     map.getPane('labelsPane').style.pointerEvents = 'none';
 
@@ -526,16 +524,6 @@
       maxZoom: 20,
       pane: 'labelsPane'
     }
-    ).addTo(map);
-
-    // ── BASE: CartoDB Dark Matter (zoom 1–19, always visible)
-    L.tileLayer(
-      'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-      {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-        subdomains: 'abcd',
-        maxZoom: 19
-      }
     ).addTo(map);
 
     L.tileLayer(basemap_source, basemap_options).addTo(map);

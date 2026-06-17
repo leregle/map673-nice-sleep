@@ -1,0 +1,10 @@
+{
+    "title": "N/ICE SLEEP — Overnight ICE Detention (2026)",
+    "info": "ICE civil immigration detention facilities mapped against NASA VIIRS nighttime satellite imagery, sized by average overnight population and colored by urban/rural context. Data sourced in June 2026 reflects the situation up to April 2026",
+    "coordinates": [
+        38,
+        -97
+    ],
+    "author": "danieldilger",
+    "link": "https://danieldilger.github.io/map673_nice_sleep"
+}
