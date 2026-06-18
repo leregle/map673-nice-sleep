@@ -380,11 +380,11 @@
       Metropolitan
     </div>
     <div class="legend-item">
-      <div class="legend-dot" style="background: #4ade80;"></div>
+      <div class="legend-dot" style="background: #a3e635;"></div>
       Micropolitan
     </div>
     <div class="legend-item">
-      <div class="legend-dot" style="background: #fb923c;"></div>
+      <div class="legend-dot" style="background: #f87171;"></div>
       Rural / none
     </div>
     <hr class="legend-rule" />
@@ -479,8 +479,8 @@
   <!-- PapaParse — uncomment once /data/ice_facilities_clean.csv is in the repo -->
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script> -->
 
-  <!-- Turf.js — uncomment when wiring geolocation nearest-facility (Module 07+) -->
-  <!-- <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script> -->
+  
+  <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 
   <script>
 
@@ -558,8 +558,8 @@
 
     var cbsaColors = {
       'Metro': '#38bdf8',
-      'Micro': '#4ade80',
-      'Rural': '#fb923c'
+      'Micro': '#a3e635',
+      'Rural': '#f87171'
     };
 
     function getColor(cbsaType) {
@@ -571,7 +571,7 @@
     // Floor of 3px keeps zero-pop facilities (hospitals, staging areas) visible
     // as structural presence rather than collapsing to invisible points.
     function getRadius(pop) {
-      return Math.max(3, Math.sqrt(pop || 1) * 1); // added max = 3 so that dots are more visible at hi zoom
+      return Math.max(5, Math.sqrt(pop || 1) * 1); // added max = 5 so that dots are more visible at hi zoom
     };
 
     // ── RENDER FACILITIES ────────────────────────────────────────────────
@@ -590,9 +590,9 @@
         var radius = getRadius(f.avg_midnight_pop);
 
         var badgeBg = {
-          'Metro': 'rgba(129,140,248,0.15)',
-          'Micro': 'rgba(167,139,250,0.15)',
-          'Rural': 'rgba(251,146,60,0.15)'
+          'Metro': 'rgba(56,189,248,0.15)',
+          'Micro': 'rgba(163,230,53,0.15)',
+          'Rural': 'rgba(248,113,113,0.15)'
         }[f.cbsa_type] || 'rgba(100,116,139,0.15)';
 
         var popup = [
@@ -621,7 +621,6 @@
         marker.on('mouseout', function () {
           this.setStyle({ weight: 1, fillOpacity: 0.35 });
         });
-        marker.on('mouseover', function () { this.bringToFront(); });
         marker.bindPopup(popup, { maxWidth: 240 }).addTo(detentionLayer);
       });
 
@@ -859,10 +858,38 @@
     });
 
     // ── GEOLOCATION ──────────────────────────────────────────────────
-    // TODO (final week): navigator.geolocation.getCurrentPosition →
-    //   Turf.js nearestPoint → flyTo nearest facility → open popup
+    // navigator.geolocation.getCurrentPosition →
+    //  Turf.js nearestPoint → flyTo nearest facility → open popup
+
     document.getElementById('geolocate-btn').addEventListener('click', function () {
-      alert('Geolocation: coming soon!');
+      if (!navigator.geolocation || !facilitiesData.length) return;
+
+      navigator.geolocation.getCurrentPosition(function (position) {
+        var userPoint = turf.point([position.coords.longitude, position.coords.latitude]);
+
+        var points = turf.featureCollection(
+          facilitiesData.map(function (f) {
+            return turf.point([f.lon, f.lat]);
+          })
+        );
+
+        var nearest = turf.nearestPoint(userPoint, points);
+        var f = facilitiesData[nearest.properties.featureIndex];
+
+        map.flyTo([f.lat, f.lon], 9, { duration: 1.5 });
+
+        map.once('moveend', function () {
+          detentionLayer.eachLayer(function (layer) {
+            var ll = layer.getLatLng();
+            if (Math.abs(ll.lat - f.lat) < 0.0001 && Math.abs(ll.lng - f.lon) < 0.0001) {
+              layer.openPopup();
+            }
+          });
+        });
+
+      }, function () {
+        alert('Location unavailable.');
+      });
     });
 
     lucide.createIcons(); // directs Lucide to display actual SVGs
