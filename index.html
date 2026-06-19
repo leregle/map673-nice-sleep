@@ -218,7 +218,7 @@
       background: rgba(79, 70, 229, 0.95);
     }
 
-      #basemap-toggle {
+    #basemap-toggle {
       position: absolute;
       bottom: 96px;
       /* sits ~8px above geolocate-btn */
@@ -474,20 +474,19 @@
   <!-- ─── GEOLOCATION & TOGGLE BUTTON  ────────────────────────────── -->
   <!-- TODO (for final): navigator.geolocation → Turf.js nearestPoint() → flyTo -->
 
-  <!-- ——— BASEMAP TOGGLE —————
-   uses lucide icon -->
-<!-- ——— BEFORE/AFTER ERA TOGGLE ————— -->
+  <!-- ——— BEFORE/AFTER JAN25 TOGGLE ————— -->
   <button id="era-toggle">
     <span id="era-label">Showing: after Jan '25</span>
   </button>
 
+  <!-- ——— BASEMAP TOGGLE —————
+   uses lucide icon -->
   <button id="basemap-toggle">
     <i data-lucide="eye-off" id="icon-hide" width="13" height="13"></i>
     <i data-lucide="eye" id="icon-show" width="13" height="13" style="display:none"></i>
     <span id="toggle-label">Hide city lights</span>
   </button>
 
-  
 
   <!-- ——— GEOLOC TOGGLE ————— -->
   <button id="geolocate-btn">
@@ -586,6 +585,8 @@
 
     var detentionLayer = L.layerGroup().addTo(map);
     var facilitiesData = [];
+    var beforeAfterData = {};
+    var currentMode = 'after';
 
     // ── COLOR SCALE: cbsa_type ───────────────────────────────────────────
 
@@ -610,17 +611,35 @@
     // ── RENDER FACILITIES ────────────────────────────────────────────────
     // Initial sort assures smaller circles are shown on top of larger ones
     // Issue apparent at Folkston, GA in particular.
+    // Amended for including before/after comparison,
 
-    function renderFacilities(data) {
+    function renderFacilities(data, mode) {
+      mode = mode || 'after';
+
       var sorted = data.slice().sort(function (a, b) {
-        return (b.avg_midnight_pop || 0) - (a.avg_midnight_pop || 0);
+        var ba = beforeAfterData[a.facility_id];
+        var bb = beforeAfterData[b.facility_id];
+        var popA = (ba && !isNaN(ba['avg_midnight_' + mode]) && ba['avg_midnight_' + mode] > 0)
+          ? ba['avg_midnight_' + mode] : (a.avg_midnight_pop || 0);
+        var popB = (bb && !isNaN(bb['avg_midnight_' + mode]) && bb['avg_midnight_' + mode] > 0)
+          ? bb['avg_midnight_' + mode] : (b.avg_midnight_pop || 0);
+        return popB - popA;
       });
 
       sorted.forEach(function (f) {
         if (!f.lat || !f.lon) return;
 
         var color = getColor(f.cbsa_type);
-        var radius = getRadius(f.avg_midnight_pop);
+        var ba = beforeAfterData[f.facility_id];
+        if (mode === 'before' && !(ba && ba.avg_midnight_before > 0)) return;
+        var pop = (ba && !isNaN(ba['avg_midnight_' + mode]) && ba['avg_midnight_' + mode] > 0)
+          ? ba['avg_midnight_' + mode] : (f.avg_midnight_pop || 0);
+        var radius = getRadius(pop);
+
+        var convBefore = (ba && !isNaN(ba.convicted_rate_before))
+          ? (ba.convicted_rate_before * 100).toFixed(1) + '%' : 'n/a';
+        var convAfter = (ba && !isNaN(ba.convicted_rate_after))
+          ? (ba.convicted_rate_after * 100).toFixed(1) + '%' : 'n/a';
 
         var badgeBg = {
           'Metro': 'rgba(56,189,248,0.15)',
@@ -630,12 +649,15 @@
 
         var popup = [
           '<div class="popup-name">' + f.name + '</div>',
-          '<div class="popup-location">' + f.city + ', ' + f.state + '</div>' +
-          '<div class="popup-location" style="color:#4b5a6a;font-size:0.64rem;margin-top:2px;">' + f.field_office + ' Field Office</div>',
-          '<div class="popup-stat"><span>Avg overnight</span><strong>' + (f.avg_midnight_pop || 0).toFixed(1) + '</strong></div>',
+          '<div class="popup-location">' + f.city + ', ' + f.state + '</div>',
+          '<div class="popup-location" style="color:#8899aa;font-size:0.64rem;margin-top:2px;">' + f.field_office + ' Field Office</div>',
+          '<div class="popup-stat"><span>Avg overnight</span><strong>' + pop.toFixed(1) + '</strong></div>',
           '<div class="popup-stat"><span>Peak overnight</span><strong>' + f.max_midnight_pop + '</strong></div>',
           '<div class="popup-stat"><span>Nights active</span><strong>' + f.days_midnight + ' / yr</strong></div>',
-          '<div><span class="popup-badge" style="background:' + badgeBg + ';color:' + color + ';border:1px solid ' + color + '44;">' + (f.cbsa_type || 'Rural') + '</span></div>'
+          '<hr style="border:none;border-top:1px solid rgba(79,70,229,0.2);margin:8px 0;">',
+          '<div class="popup-stat" style="font-family:\'Geist Mono\',monospace;font-size:0.65rem;"><span>Convicted (before Jan \'25)</span><strong>' + convBefore + '</strong></div>',
+          '<div class="popup-stat" style="font-family:\'Geist Mono\',monospace;font-size:0.65rem;"><span>Convicted (after Jan \'25)</span><strong>' + convAfter + '</strong></div>',
+          '<div style="margin-top:8px;"><span class="popup-badge" style="background:' + badgeBg + ';color:' + color + ';border:1px solid ' + color + '44;">' + (f.cbsa_type || 'Rural') + '</span></div>'
         ].join('');
 
         var marker = L.circleMarker([f.lat, f.lon], {
@@ -648,17 +670,14 @@
         });
         marker.on('mouseover', function () {
           this.setStyle({ weight: 2.5, fillOpacity: 0.65 });
-          this.bringToFront();  // for the Folkston case
+          this.bringToFront();
         });
-
         marker.on('mouseout', function () {
           this.setStyle({ weight: 1, fillOpacity: 0.35 });
         });
-        marker.bindPopup(popup, { maxWidth: 240 }).addTo(detentionLayer);
+        marker.bindPopup(popup, { maxWidth: 260 }).addTo(detentionLayer);
       });
-
     }
-
     // ── LOAD DATA ───────────────────────────────────────────────
     // Using Live Server locally and later push to GitHub Pages.
     // CSV goes in /data/ folder at repo root.
@@ -681,7 +700,7 @@
         });
         console.log('With coordinates:', facilities.length);
 
-        renderFacilities(facilities);
+        renderFacilities(facilities, currentMode);
 
         facilitiesData = facilities;
 
@@ -730,7 +749,7 @@
       {
         icao: 'KAEX', iata: 'AEX', name: 'Alexandria International Airport',
         city: 'Alexandria', state: 'LA',
-        lat: 31.327, lon: -92.550,
+        lat: 31.1442, lon: -92.3951,
         tier: 1,
         departures_2025: 2439,
         note: 'Primary domestic staging hub — 266 shuffle flights in April 2026 alone'
@@ -760,7 +779,7 @@
         note: 'Official ICE Air staging facility — AROCC (25,000 sq ft staging center) on site'
       },
 
-      // ── TIER 2: high-volume secondary hubs ──────────────────────
+      // ── TIER 2: high-volume secondary hubs (transfer) ──────────────────────
       {
         icao: 'KMIA', iata: 'MIA', name: 'Miami International Airport',
         city: 'Miami', state: 'FL',
@@ -866,7 +885,7 @@
         var officeMatch = office === 'all' || f.field_office === office;
         return cbsaMatch && officeMatch;
       });
-      renderFacilities(filtered);
+      renderFacilities(filtered, currentMode);
     }
 
     document.querySelectorAll('.filter-checks input').forEach(function (cb) {
@@ -929,11 +948,36 @@
 
     lucide.createIcons(); // directs Lucide to display actual SVGs
 
-    // ── TIME SLIDER (placeholder) ─────────────────────────────────────────
-    // TODO (Module 07+): load pre-aggregated national midnight trend CSV
-    //   (from daily population dataset, ~1,300 rows) and render as a line
-    //   chart in a bottom panel. A slider can sequence per-facility views
-    //   showing change across the Jan 2025 inflection point.
+    // ── BEFORE/AFTER DATA ────────────────────────────────────────────────
+    // Loads per-facility stats split on Jan 20 2025 (inauguration day).
+    // Joined client-side to facilitiesData on facility_id.
+    Papa.parse('data/facilities_before_after.csv', {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        results.data.forEach(function (row) {
+          if (row.facility_id) beforeAfterData[row.facility_id] = row;
+        });
+        if (facilitiesData.length) {
+          detentionLayer.clearLayers();
+          renderFacilities(facilitiesData, currentMode);
+        }
+      },
+      error: function (err) {
+        console.error('before/after load error:', err);
+      }
+    });
+
+    // ── BEFORE/AFTER J25 TOGGLE ───────────────────────────────────────────────────────
+    document.getElementById('era-toggle').addEventListener('click', function () {
+      currentMode = currentMode === 'after' ? 'before' : 'after';
+      document.getElementById('era-label').textContent =
+        currentMode === 'after' ? "Showing: After Jan '25" : "Showing: before Jan '25";
+      applyFilters();
+    });
+
 
   </script>
 
