@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8" />
-  <title>N/ICE SLEEP — Overnight ICE Detention</title>
+  <title>ICE At Night: Before & After</title>
   <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
 
   <!-- Leaflet -->
@@ -218,7 +218,7 @@
       background: rgba(79, 70, 229, 0.95);
     }
 
-    #basemap-toggle {
+      #basemap-toggle {
       position: absolute;
       bottom: 96px;
       /* sits ~8px above geolocate-btn */
@@ -243,6 +243,33 @@
     }
 
     #basemap-toggle:hover {
+      background: rgba(79, 70, 229, 0.25);
+    }
+
+    #era-toggle {
+      position: absolute;
+      bottom: 144px;
+      right: 20px;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      background: rgba(26, 26, 46, 0.75);
+      border: 1px solid rgba(79, 70, 229, 0.5);
+      border-radius: 8px;
+      color: #e0e7ff;
+      font-family: 'Geist', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: background 0.15s ease;
+    }
+
+    #era-toggle:hover {
       background: rgba(79, 70, 229, 0.25);
     }
 
@@ -308,7 +335,7 @@
 
     .popup-location {
       font-size: 0.68rem;
-      color: #6366f1;
+      color: #818cf8;
       margin-bottom: 10px;
     }
 
@@ -352,7 +379,6 @@
       gap: 6px;
       cursor: pointer;
     }
-
   </style>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -365,10 +391,11 @@
 
   <!-- ─── TITLE ───────────────────────────────────────────────────────── -->
   <div id="title-panel" class="glass">
-    <h1>N/ICE SLEEP</h1>
-    <p class="subtitle">Overnight Immigration Detention</p>
+    <h1>ICE AT NIGHT</h1>
+    <p class="subtitle">ICE Detentions — Before &amp; After</p>
     <p class="description">
-      Where ICE holds people after midnight — and whether that place is in the light.
+      Mapped at midnight: where ICE holds people, at what scale, and in what kind of place. The circles grew after
+      January 20, 2025. Most detainees have no criminal conviction.
     </p>
   </div>
 
@@ -449,12 +476,18 @@
 
   <!-- ——— BASEMAP TOGGLE —————
    uses lucide icon -->
+<!-- ——— BEFORE/AFTER ERA TOGGLE ————— -->
+  <button id="era-toggle">
+    <span id="era-label">Showing: after Jan '25</span>
+  </button>
 
   <button id="basemap-toggle">
     <i data-lucide="eye-off" id="icon-hide" width="13" height="13"></i>
     <i data-lucide="eye" id="icon-show" width="13" height="13" style="display:none"></i>
     <span id="toggle-label">Hide city lights</span>
   </button>
+
+  
 
   <!-- ——— GEOLOC TOGGLE ————— -->
   <button id="geolocate-btn">
@@ -479,7 +512,7 @@
   <!-- PapaParse — uncomment once /data/ice_facilities_clean.csv is in the repo -->
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script> -->
 
-  
+
   <script src="https://unpkg.com/@turf/turf@6/turf.min.js"></script>
 
   <script>
@@ -856,6 +889,8 @@
         ? 'Hide city lights'
         : 'Show city lights';
     });
+
+
 
     // ── GEOLOCATION ──────────────────────────────────────────────────
     // navigator.geolocation.getCurrentPosition →
