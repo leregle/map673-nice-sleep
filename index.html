@@ -106,11 +106,17 @@
       line-height: 1.55;
     }
 
+    #title-panel .attribution {
+      font-size: 0.62rem;
+      color: #fbfbfb;
+      line-height: 1.55;
+    }
+
     /* ─── LEGEND ─────────────────────────────────────────────────────── */
     #legend {
       position: absolute;
       bottom: 48px;
-      left: 20px;
+      left: 60px;
       z-index: 1000;
       padding: 14px 18px;
       min-width: 172px;
@@ -379,6 +385,27 @@
       gap: 6px;
       cursor: pointer;
     }
+
+    #info-btn {
+      position: absolute;
+      bottom: 20px;
+      left: 60px;
+      z-index: 1000;
+      padding: 6px 12px;
+      background: rgba(26, 26, 46, 0.75);
+      border: 1px solid rgba(79, 70, 229, 0.5);
+      border-radius: 8px;
+      color: #a78bfa;
+      font-family: 'Geist', sans-serif;
+      font-size: 0.72rem;
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      text-decoration: none;
+    }
+
+    #info-btn:hover {
+      background: rgba(79, 70, 229, 0.25);
+    }
   </style>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
@@ -394,10 +421,13 @@
     <h1>ICE AT NIGHT</h1>
     <p class="subtitle">ICE Detentions — Before &amp; After</p>
     <p class="description">
-      Mapped at midnight: where ICE holds people, at what scale, and in what kind of place. The circles grew after
-      January 20, 2025. Most detainees have no criminal conviction.
+      Mapped at midnight: where ICE holds people, at what scale, and in what kind of place. The toggle marks January 20,
+      2025 as an inflection point — 81% of existing facilities grew, 212 new sites activated. The data runs through
+      April 2026. Click any circle for detail, including the share of detainees with a criminal conviction — which fell
+      as detention expanded.
     </p>
   </div>
+  <a id="info-btn" href="https://github.com/leregle/map673-nice-sleep" target="_blank">ⓘ About</a>
 
   <!-- ─── LEGEND ──────────────────────────────────────────────────────── -->
   <div id="legend" class="glass">
