@@ -50,7 +50,7 @@
       color: #e2e8f0;
     }
 
-    /* force dark bg behind VIIRS tiles — prevents white flash on load */
+    /* force dark bg behind Night Light tiles — prevents white flash on load */
     .leaflet-container {
       background: #000 !important;
     }
@@ -165,7 +165,7 @@
       color: #7c8fa8;
     }
 
-    /* ─── FILTER PANEL (placeholder) ─────────────────────────────────── */
+    /* ─── FILTER PANEL ─────────────────────────────────── */
     #filter-panel {
       position: absolute;
       top: 20px;
@@ -196,7 +196,7 @@
       cursor: not-allowed;
     }
 
-    /* ─── GEOLOCATION BUTTON (placeholder) ───────────────────────────── */
+    /* ─── GEOLOCATION BUTTON ───────────────────────────── */
     #geolocate-btn {
       position: absolute;
       bottom: 48px;
@@ -421,9 +421,9 @@
     <h1>ICE AT NIGHT</h1>
     <p class="subtitle">ICE Detentions — Before &amp; After</p>
     <p class="description">
-      Mapped at midnight: where ICE holds people, at what scale, and in what kind of place. The toggle marks January 20,
-      2025 as an inflection point — 81% of existing facilities grew, 212 new sites activated. The data runs through
-      April 2026. Click any circle for detail, including the share of detainees with a criminal conviction — which fell
+      Mapped at midnight: where ICE holds people, at what scale, and in what kind of facility. January 20,
+      2025 is the before/after date. Since then, 81% of existing facilities grew, 212 new sites appeared. The data runs through
+      April 2026. Click any circle or airport for detail, including the share of detainees with a criminal conviction, which fell
       as detention expanded.
     </p>
   </div>
@@ -631,15 +631,12 @@
     // ── RADIUS SCALE: avg_midnight_pop ───────────────────────────────────
     // Square-root scaling keeps circle area proportional to population value.
     // Floor of 3px keeps zero-pop facilities (hospitals, staging areas) visible
-    // as structural presence rather than collapsing to invisible points.
     function getRadius(pop) {
       return Math.max(5, Math.sqrt(pop || 1) * 1); // added max = 5 so that dots are more visible at hi zoom
     };
 
     // ── RENDER FACILITIES ────────────────────────────────────────────────
     // Initial sort assures smaller circles are shown on top of larger ones
-    // Issue apparent at Folkston, GA in particular.
-    // Amended for including before/after comparison,
 
     function renderFacilities(data, mode) {
       mode = mode || 'after';
@@ -764,13 +761,7 @@
 
     // ── AIRPORT LAYER — ICE Air departure hubs ──────────────────────
     // Source: Human Rights First, ICE Flight Monitor April 2026 Report.
-    // Tier 1: official ICE Air deportation staging facilities (named
-    //   explicitly in the report, p.9). Tier 2: high-volume secondary
-    //   hubs by 2025 departure count + 2026 monthly consistency.
-    // Coordinates approximate; verify via ourairports.com if needed.
-    // TODO (final week): scale iconSize by tier, or add opacity diff.
-    // TODO (future): poll api.adsb.lol/v2/icao/<codes> for live positions
-    //   using the ICAO hex list from adsbexchange URL in project notes.
+    // Tier 1: official ICE Air deportation staging facilities. Tier 2: high-volume secondary hubs
 
     var airportData = [
       // ── TIER 1: official staging facilities ─────────────────────
@@ -780,7 +771,7 @@
         lat: 31.1442, lon: -92.3951,
         tier: 1,
         departures_2025: 2439,
-        note: 'Primary domestic staging hub — 266 shuffle flights in April 2026 alone'
+        note: 'Primary domestic staging hub. 266 shuffle flights in April 2026 alone'
       },
       {
         icao: 'KHRL', iata: 'HRL', name: 'Valley International Airport',
@@ -788,7 +779,7 @@
         lat: 26.229, lon: -97.654,
         tier: 1,
         departures_2025: 1997,
-        note: 'Primary domestic staging hub — 135 shuffle flights in April 2026'
+        note: 'Primary domestic staging hub. 135 shuffle flights in April 2026'
       },
       {
         icao: 'KELP', iata: 'ELP', name: 'El Paso International Airport',
@@ -796,7 +787,7 @@
         lat: 31.807, lon: -106.378,
         tier: 1,
         departures_2025: 1159,
-        note: 'Official ICE Air staging facility — origin of 51-hour Poland/Moldova flight, Apr 2026'
+        note: 'Official ICE Air staging facility. Origin of a 51-hour Poland/Moldova flight, Apr 2026'
       },
       {
         icao: 'KIWA', iata: 'IWA', name: 'Phoenix-Mesa Gateway Airport',
@@ -804,7 +795,7 @@
         lat: 33.308, lon: -111.655,
         tier: 1,
         departures_2025: 778,
-        note: 'Official ICE Air staging facility — AROCC (25,000 sq ft staging center) on site'
+        note: 'Official ICE Air staging facility. 25,000 sq ft staging center on site'
       },
 
       // ── TIER 2: high-volume secondary hubs (transfer) ──────────────────────
